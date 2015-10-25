@@ -26,15 +26,17 @@ struct Force
 
 class Ball
 {
-    double mass;
     double _x;
     double _y;
     double _vx;
     double _vy;
     Force _force;//external force, if i need it here???
+    double _mass;
+    double _Radius;
 
 public:
-    Ball(double x = 0, double y = 0, double vx = 0, double vy = 0, double force) : force(0, 0)
+    Ball(double x = 0, double y = 0, double vx = 0, double vy = 0,\
+         double force, double mass = 1, double radius = 0.1)//list of initialization?
     {
         _x = x;
         _y = y;
@@ -42,6 +44,8 @@ public:
         _vy = vy;
         _force.Fx = force.Fx;
         _force.Fy = force.Fy;
+        _mass = mass;
+        _Radius = radius;
     }
 //-------------------------------------------------------------------------------------------------
     double get_x() const
@@ -73,9 +77,21 @@ public:
     {
         _x += vx * dt;
         _y += vy * dt;
-        vx += (force.Fx * dt) / mass;
-        vy += (force.Fy * dt) / mass;
+        vx += (force.Fx + this->_force) * dt / mass;
+        vy += (force.Fy + this->_force) * dt / mass;
     }
+};
+//===================================================================================================
+class Wall//is it useful to provide for slope walls
+{
+    double _size;
+    double X_pos;
+    double y_pos;
+    double _type; // vertical or horizontal
+public:
+    const bool VERTICAL = 1;
+    const bool HORIZONT = 0;
+    //I'll continue
 };
 
 #endif // OBJECTS
