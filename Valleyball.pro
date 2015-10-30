@@ -9,5 +9,5 @@ include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
-    objects.h
+    ball.h
 

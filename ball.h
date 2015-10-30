@@ -1,15 +1,14 @@
 ﻿#ifndef OBJECTS
 #define OBJECTS
+#include "vector2D.h"
+
 
 struct Force
 {
-    double Fx;
-    double Fy;
+    vector2D F;
 
-    Force(double fx = 0, double fy = 0)
+    Force(double fx = 0, double fy = 0):F(fx, fy)
     {
-        Fx = fx;
-        Fy = fy;
     }
 #if 0
     double value;
@@ -21,7 +20,6 @@ struct Force
     }
     //may be (double *F) and create array of 2 elements: Fx and Fy - can be changig for 3D easier
 #endif
-
 };
 
 class Ball
@@ -82,17 +80,6 @@ public:
     }
 };
 //===================================================================================================
-class Wall//is it useful to provide for slope walls
-{
-    double _size;
-    double X_pos;
-    double y_pos;
-    double _type; // vertical or horizontal
-public:
-    const bool VERTICAL = 1;
-    const bool HORIZONT = 0;
-    //I'll continue
-};
 
 #endif // OBJECTS
 
