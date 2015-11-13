@@ -10,6 +10,7 @@ struct Vector2D
     Vector2D &operator +=(const Vector2D &rhs);
     Vector2D &operator -=(const Vector2D &rhs);
     Vector2D &operator *=(double a);
+	double operator ()(const Vector2D &rhs);
 
     // make this vector normal
     Vector2D &normalize(void);
@@ -28,3 +29,4 @@ Vector2D operator *(const Vector2D &lt, double a);
 Vector2D operator *(double a, const Vector2D &rt);
 
 #endif // VECTOR2D_H
+

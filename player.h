@@ -4,36 +4,47 @@
 #include "vector2d.h"
 #include "block.h"
 
-class Player
+// Block that can be moved along line
+class Movable : private Block
 {
 public:
-	class position : public Block
-	{
-	public:
-		position(Vector2D &left, Vector2D &right, 
-			double height, double position);
-		Vector2D get_pos(void);
-		Vector2D get_head(void);
-		// here we understend position as
-		// lt_edge + (rt_edge - lt_edge) * pos_mul;
-	private:
-		Vector2D lt_edge_;
-		Vector2D rt_edge_;
-		double height_;
-		double pos_mul_;
-	};
+	Movable(const Vector2D &left, const Vector2D &right, 
+		double height, double position);
+	Vector2D get_pos(void);
+	Vector2D get_head(void);
 
-	Player(Vector2D &left, Vector2D &right, double height,
+	// Allovs move bolck along the vector from left side to right 
+	// (can be negative)
+	void move_by(double meters); 	
+	
+	// I don't shure it sould exist. But if it so...
+	// Moves the block as close as possible to the point
+	// void move_to(Vector2D point);
+
+private:
+	// here we understend position as
+	// lt_edge + (rt_edge - lt_edge) * direction;
+	Vector2D lt_edge_;
+	Vector2D rt_edge_;
+	double pos_mul_;
+	Vector2D direction_;
+};
+
+class Player : public Movable
+{
+public:
+	Player(const Vector2D &left, const Vector2D &right, double height,
 		double max_speed, double max_force, double curr = 0.5);
 	~Player();
 
 	virtual void idle(void);
 	virtual Vector2D get_force(void);
 
-	position pos;
 private:
+	double height_; // maybe we don't need it.
 	double max_force_;
 	double max_speed_;
+	Vector2D honey_point;
 };
 
 #endif // PLAYER_H

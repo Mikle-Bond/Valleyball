@@ -1,9 +1,9 @@
 #include "player.h"
 
-Player::Player(Vector2D &left, Vector2D &right, double height, 
+Player::Player(const Vector2D &left, const Vector2D &right, double height, 
 	double max_speed, double max_force, double curr) 
 :
-	pos(left, right, height, curr),
+	Movable(left, right, height, curr),
 	max_force_(max_force),
 	max_speed_(max_speed)
 {
@@ -15,23 +15,34 @@ Player::~Player()
 
 }
 
-Player::position::position(Vector2D &left, Vector2D &right, 
+Movable::Movable(const Vector2D &left, const Vector2D &right, 
 	double height, double position)
 :
 	lt_edge_(left),
 	rt_edge_(right),
-	height_(height),
 	pos_mul_(position)
 {
+	direction_ = right - left;
+	direction_.normalize();
+	a = (right - left) * position + left;
+	b = a + Vector2D(0.0, height);
 
 }
 
-Vector2D Player::position::get_pos()
+Vector2D Movable::get_pos(void)
 {
-	return (rt_edge_ - lt_edge_) * pos_mul_ + lt_edge_;
+	return a;
 }
 
-Vector2D Player::position::get_head()
+Vector2D Movable::get_head(void)
 {
-	return get_pos() + Vector2D(0.0, height_);
+	return b;
+}
+
+void Movable::move_by(double meters)
+{
+	if (meters == 0.0) 
+		return;
+	Vector2D temp = direction_ * meters + get_pos();
+	temp.x / 
 }
