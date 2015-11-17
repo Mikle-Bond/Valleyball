@@ -5,7 +5,7 @@
 struct Vector2D
 {
     explicit Vector2D(double _x = 0.0, double _y = 0.0);
-    ~Vector2D();
+    virtual ~Vector2D();
 
     Vector2D &operator +=(const Vector2D &rhs);
     Vector2D &operator -=(const Vector2D &rhs);

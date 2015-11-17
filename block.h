@@ -16,8 +16,7 @@ struct Block
 		double bx = 0.0,
 		double by = 0.0);
 	Block (const Vector2D &_a, const Vector2D &_b);
-	// Default copy constructor is just fine.
-	~Block();
+	virtual ~Block();
 
 	Vector2D a, b;
 };
