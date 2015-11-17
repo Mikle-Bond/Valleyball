@@ -77,3 +77,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Linux
+# =========================
+
+# Vim temp files
+
+.*.swp
+
