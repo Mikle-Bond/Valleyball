@@ -3,8 +3,9 @@
 
 #include "vector2d.h"
 
-// Movable is a poin, that can be moved from lt_edge_ on the left,
-// to rt_edge_ on the right. It has it's speed and position.
+// Movable is a point, that can be moved from lb_edge_ on the 
+// bottom-left, to rt_edge_ on the top-right. Only in this rectangle.
+// It has it's speed and position.
 
 class Movable
 {
@@ -15,13 +16,13 @@ public:
 	Vector2D get_pos(void);
 
 	// Moving block on speed*dt
-	void move(double dt); 	
+	virtual void move(double dt); 	
 
 	// Can be canged outside. In geberal.
 	Vector2D speed;
 private:
 	Vector2D position_;
-	Vector2D lt_edge_;
+	Vector2D lb_edge_;
 	Vector2D rt_edge_;
 };
 

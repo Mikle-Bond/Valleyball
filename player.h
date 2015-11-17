@@ -5,21 +5,23 @@
 #include "block.h"
 #include "movable.h"
 
-class Player : public Movable
+// Here we mean position of the Movable as a Block.a
+class Player : public Movable, public Block
 {
 public:
 	Player(const Vector2D &left, const Vector2D &right, double height,
 		double max_speed, double max_force, double curr = 0.5);
-	virtual ~Player();
+	virtual ~Player() = 0;
 
+	virtual void move(double dt) override;
 	virtual void idle(void);
 	virtual Vector2D get_force(void);
 
 private:
+	void set_block(void);
 	double height_; // maybe we don't need it.
 	double max_force_;
 	double max_speed_;
-	Vector2D honey_point;
 };
 
 #endif // PLAYER_H
