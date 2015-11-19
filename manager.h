@@ -72,7 +72,7 @@ private:
 	std::vector<block_t> block_tab;
 	std::vector<ball_t> ball_tab;
 	std::vector<player_t> player_tab;
-	Block *net_tab[1];
+	std::vector<Block *> net_tab;
 
 	// Names
 	int get_num(const std::string & str); // returns -1 if not in name_tab
