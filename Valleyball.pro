@@ -6,12 +6,16 @@ CONFIG += C++11
 
 SOURCES += main.cpp \
     vector2d.cpp \
-    block.cpp
+    block.cpp \
+    player.cpp \
+    sam.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
     vector2d.h \
-    block.h
+    block.h \
+    player.h \ 
+    sam.h 
 

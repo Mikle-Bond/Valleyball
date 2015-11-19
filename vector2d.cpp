@@ -77,3 +77,8 @@ Vector2D Vector2D::normal()
     return Vector2D(*this).normalize();
 }
 
+double Vector2D::operator()(const Vector2D & rhs)
+{
+	return x * rhs.x + y * rhs.y;
+}
+
