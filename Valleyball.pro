@@ -14,6 +14,7 @@ include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
+    ball.h \
     vector2d.h \
     block.h \
     player.h \ 
