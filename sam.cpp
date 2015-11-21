@@ -1,4 +1,4 @@
-#include "sam.h"
+﻿#include "sam.h"
 #include "manager.h"
 
 
@@ -11,8 +11,6 @@ SamThePlayer::SamThePlayer(const Vector2D &left, const Vector2D &right)
 
 void SamThePlayer::idle(void)
 {
-	Manager& mgr = Manager::getManager();
-	Ball& ball = mgr.getBall();	
 }
 
 Vector2D SamThePlayer::get_force(void)
