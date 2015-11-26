@@ -34,7 +34,7 @@
 
 class Ball;
 
-class Manager
+class Manager 
 {
 public:
 	static Manager& getSingleton();
@@ -44,38 +44,50 @@ public:
 	// So, I think it is nice place for moving semantics.
 	
 	void addNet(Block *net);
-	void addBlock(Block *blk, std::string obeyer);
-	void addPlayer(Player *plr, std::string name);
+	void addBlock(Block *blk, const std::string & obeyer);
+	void addPlayer(Player *plr, const std::string & name);
 	void addBall(Ball *bll);
+
+	// Ok, here is the first big crutch:
+	const Player * getAnotherPlayer(const Player * t);
+	// To explain this function, se need to understend game
+	// as battle between *two* players. 
+	// But the manager was written to manage *many* players. So, 
+	// I need to make up this place, 'cos it's confusing.
+
 private:
 	Manager();
 	Manager(const Manager &);	
-	
-	struct name_t {
-		std::string name;
-		int val;
-	};
-	struct block_t {
-		int owner;
-		Block *blk;
-	};
-	struct ball_t {
-		int last;
-		Ball *bll;
-	};
-	struct player_t {
-		int val;
-		Player *plr;
+	~Manager();
+
+
+	// Here ve have a list for each kind of objects.
+	// To ease handling them, we can put them into
+	// container like this.
+	template <class T>
+	struct list_elem_t {
+		T *obj;   	// Object of scene,
+		Player *plr;	// and the owner player.
 	};
 
-	std::vector<name_t> name_tab;
+	typedef list_elem_t<Block> block_t;
+	typedef list_elem_t<Ball> ball_t;
+
+	// As was mentioned, we need "nets".
+	// But we will handle them as all others Blocks,
+	// marking them as owned by (nullptr)
 	std::vector<block_t> block_tab;
 	std::vector<ball_t> ball_tab;
+	
+	struct player_t {
+		Player *plr;
+		std::string name;
+	};
+
 	std::vector<player_t> player_tab;
-	std::vector<Block *> net_tab;
 
 	// Names
-	int get_num(const std::string & str); // returns -1 if not in name_tab
+	Player * getPlayer(const std::string & str); // returns nullptr if not in name_tab
 	
 };
 

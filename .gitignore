@@ -82,6 +82,7 @@ $RECYCLE.BIN/
 # =========================
 
 # Vim temp files
-
 .*.swp
 
+# YCM config scripts
+.ycm_*

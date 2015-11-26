@@ -1,31 +1,40 @@
 #include "manager.h"
 
+namespace {
+
+template <typename T>
+inline void killVector(std::vector<T> & vect)
+{
+	for (auto i = vect.begin(); i != vect.end(); ++i) {
+		delete i->obj;
+	}
+}
+
+}
+
 Manager& Manager::getSingleton()
 {
 	static Manager single;
 	return single;
 }
 
-int Manager::get_num(const std::string & str)
+Player * Manager::getPlayer(const std::string & str)
 {
-	for (auto it = name_tab.begin(); it != name_tab.end(); ++it) {
+	for (auto it = player_tab.begin(); it != player_tab.end(); ++it) {
 		if ((*it).name == str) {
-			return (*it).val;
+			return (*it).plr;
 		}
 	}
 	
-	int res = name_tab.size(); 
-	name_t x;
-	x.name = name; 
-	x.val = res;
-	name_tab.push_back(std::move(x));
-	
-	return res;
+	return nullptr;
 }
 
 void Manager::addNet(Block *net)
 {
-	net_tab.push_back(net);
+	block_t x;
+	x.plr = nullptr;
+	x.obj = net;
+	block_tab.push_back(std::move(x));
 }
 
 
@@ -40,20 +49,42 @@ void Manager::addPlayer(Player *plr, const std::string & name)
 
 void Manager::addBlock(Block *blk, const std::string & obeyer)
 {
-	int res = get_num(obeyer);
+	Player * res = get_num(obeyer);
+	if (!res || !blk) { throw; }
 	block_t y;
-	y.blk = blk;
-	y.owner = res;
+	y.obj = blk;
+	y.plr = res;
 	player_tab.push_back(std::move(y));
 }
 	
 void addBall(Ball *bll)
 {
+	if (!bll) { throw; }
 	ball_t y;
-	y.bll = bll;
-	y.last = 0;
+	y.obj = bll;
+	y.plr = nullptr;
 	ball_tab.push_back(std::move(y));
 }
 
+const Player * getAnotherPlayer(const Player * t)
+{
+	for (auto i = player_tab.begin(); i != player_tab.end(); ++i) {
+		if (i->plr != t)
+			return i->plr;
+	}
+	return nullptr;
+}
 
+
+Manager::~Manager()
+{
+	// Nets and blocks
+	killVector<block_t>(block_tab);
+	// Balls
+	killVector<ball_t>(ball_tab);
+	// Players
+	for (auto i = player_tab.bagin(); i != player_tab.end(); ++i) {
+		delete i->plr;
+	}
+}
 
