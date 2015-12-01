@@ -49,8 +49,9 @@ public:
 	void addBall(Ball *bll);
 
 	// Ok, here is the first big crutch:
+	// The section with methods for two-players game!
 	const Player * getAnotherPlayer(const Player * t);
-	// To explain this function, se need to understend game
+	// To explain this functions, we need to understand game
 	// as battle between *two* players. 
 	// But the manager was written to manage *many* players. So, 
 	// I need to make up this place, 'cos it's confusing.
@@ -60,6 +61,7 @@ private:
 	Manager(const Manager &);	
 	~Manager();
 
+	static Manager * single;
 
 	// Here ve have a list for each kind of objects.
 	// To ease handling them, we can put them into
@@ -90,5 +92,7 @@ private:
 	Player * getPlayer(const std::string & str); // returns nullptr if not in name_tab
 	
 };
+
+Manager * Manager::single = nullptr;
 
 #endif // MANAGER_H 

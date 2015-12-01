@@ -10,12 +10,13 @@ inline void killVector(std::vector<T> & vect)
 	}
 }
 
-}
+} // namespace
 
 Manager& Manager::getSingleton()
 {
-	static Manager single;
-	return single;
+	if (!single)
+		single = new Manager();
+	return *single;
 }
 
 Player * Manager::getPlayer(const std::string & str)
