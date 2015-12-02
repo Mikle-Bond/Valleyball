@@ -4,6 +4,7 @@
 #include "vector2d.h"
 #include "block.h"
 #include "movable.h"
+#include "factory.h"
 
 // Here we mean position of the Movable as a Block.a
 class Player : public Movable, public Block
