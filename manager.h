@@ -7,7 +7,7 @@
 #include "ball.h"
 #include "block.h"
 #include "player.h"
-#include "factory.h"
+// #include "factory.h"
 
 /* Ok. Manager can manage. After giving him the beginning configuration
  * we can change nothing. So, The basic usage is to place needed objects
@@ -36,7 +36,7 @@
 
 class Ball;
 
-class Manager : private Factory 
+class Manager // : private Factory 
 {
 public:
 	static Manager& getSingleton();
@@ -51,7 +51,8 @@ public:
 	Block & addBlock(const std::string & name, const std::string & obeyer);
 	const Block & getBlock(const std::string & name);
 	// Players
-	Player & addPlayer(const std::string & name, const std::string & type);
+	template <class T>
+	T & addPlayer(const std::string & name);
 	const Player & getPlayer(const std::string & name);
 	// Balls
 	Ball & addBall(const std::string & name);
@@ -94,5 +95,17 @@ private:
 };
 
 Manager * Manager::single = nullptr;
+
+template <class T>
+T & Manager::addPlayer(const std::string & name)
+{
+	auto y = player_tab.find(name);
+	if (y->first == name) {
+		throw; // Player already exist.
+	}
+	T * plr = new T();
+	player_tab.insert(std::make_pair(name, static_cast<Player*>(plr)));
+	return *plr;
+}
 
 #endif // MANAGER_H 

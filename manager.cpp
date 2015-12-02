@@ -19,20 +19,24 @@ Manager& Manager::getSingleton()
 	return *single;
 }
 
-Player & Manager::addPlayer(const std::string & name, const std::string & type)
+#if 0
+template <class T>
+T & Manager::addPlayer(const std::string & name)
 {
-	auto it = factories.find(type);
-	if (it->first != type) {
-		throw; // Player realization is not registered.
-	}
+//	auto it = factories.find(type);
+//	if (it->first != type) {
+//		throw; // Player realization is not registered.
+//	}
+	
 	auto y = player_tab.find(name);
 	if (y->first == name) {
 		throw; // Player already exist.
 	}
-	Player * plr = it->second->create();
-	player_tab.insert(std::make_pair(name, plr));
+	T * plr = new T(); // = it->second->create();
+	player_tab.insert(std::make_pair(name, static_cast<Player*>(plr)));
 	return *plr;
 }
+#endif // 0
 
 const Player & Manager::getPlayer(const std::string & name)
 {
