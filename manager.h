@@ -52,7 +52,9 @@ public:
 	const Block & getBlock(const std::string & name);
 	// Players
 	template <class T>
-	T & addPlayer(const std::string & name);
+	T & addPlayer(const std::string & name,
+		const Vector2D &left, const Vector2D &right, double height,
+		double max_speed, double max_force, double curr = 0.5);
 	const Player & getPlayer(const std::string & name);
 	// Balls
 	Ball & addBall(const std::string & name);
@@ -97,13 +99,15 @@ private:
 Manager * Manager::single = nullptr;
 
 template <class T>
-T & Manager::addPlayer(const std::string & name)
+T & Manager::addPlayer(const std::string & name,
+	const Vector2D &left, const Vector2D &right, double height,
+	double max_speed, double max_force, double curr)
 {
 	auto y = player_tab.find(name);
 	if (y->first == name) {
 		throw; // Player already exist.
 	}
-	T * plr = new T();
+	T * plr = new T(left, right, height, max_speed, max_force, curr);
 	player_tab.insert(std::make_pair(name, static_cast<Player*>(plr)));
 	return *plr;
 }
