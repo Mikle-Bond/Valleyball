@@ -45,7 +45,19 @@ public:
 	// to the others to manage them outside,
 	// not through the manager.
 	
-	enum ExitStatus { OK, COLLISION, GAME_OVER = 0x0 };
+	enum Status { 
+		OK, 
+		ATTACK, 
+		GAME_OVER = 0x0, 
+		NOT_STARTED, 
+	       	DESTROYED
+	};
+	struct State {
+		Status currentStatus = Status::DESTROYED;
+		const std::string * playerName = nullptr;
+		const std::string * ballName = nullptr;
+		const std::string * blockName = nullptr;
+	};
 
 	// Nets
 	Block & addNet(const std::string & name);
@@ -61,16 +73,23 @@ public:
 	const Ball & getBall(const std::string & name) const;
 
 	// Frame update
-	ExitStatus nextFrame(void);
+	Status nextFrame(void);
 	void setStep(double new_dt);
+	double getStep() const;
+
+	static const State & getState();
 
 private:
 	Manager();
 	Manager(const Manager &);	
 	~Manager();
 
+	// Used fo correct end of game.
+	const std::string * getLoserName(const Player * plr) const;
+
 	static Manager * single;
 
+	static State state_;
 
 	// Here ve have a list for each kind of objects.
 	// To ease handling them, we can put them into
