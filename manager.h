@@ -40,6 +40,7 @@ class Manager : private Factory
 {
 public:
 	static Manager& getSingleton();
+	static bool resetSingleton();
 	// We should catch the objects, and not allow 
 	// to the others to manage them outside,
 	// not through the manager.
@@ -100,7 +101,5 @@ private:
 
 	double dt_;
 };
-
-Manager * Manager::single = nullptr;
 
 #endif // MANAGER_H 

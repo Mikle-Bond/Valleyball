@@ -1,5 +1,7 @@
 #include "manager.h"
 
+Manager * Manager::single = nullptr;
+
 namespace {
 
 template <typename T>
@@ -10,6 +12,14 @@ inline void killMap(std::map<std::string, T> & mp)
 	}
 }
 
+class ManagerDestroyer 
+{
+public:
+	ManagerDestroyer() {}
+	~ManagerDestroyer() { Manager::resetSingleton(); }
+};
+static ManagerDestroyer ManagerDestroyerClass;
+
 } // namespace
 
 Manager& Manager::getSingleton()
@@ -17,6 +27,16 @@ Manager& Manager::getSingleton()
 	if (!single)
 		single = new Manager();
 	return *single;
+}
+
+bool Manager::resetSingleton()
+{
+	if (single) {
+		delete single;
+		single = nullptr;
+		return true;
+	}
+	return false;
 }
 
 Player & Manager::addPlayer(const std::string & name, const std::string & type)
@@ -108,6 +128,12 @@ Manager::ExitStatus Manager::nextFrame()
 	} 
 
 	return ExitStatus::OK;
+}
+
+void Manager::setStep(double new_dt)
+{
+	if (new_dt >= 0.0)
+		dt_ = new_dt;
 }
 
 Manager::~Manager()
