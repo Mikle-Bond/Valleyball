@@ -22,6 +22,11 @@ public:
 	virtual void idle(void);
 	virtual Vector2D get_force(void);
 
+protected:
+	void initDefault(const Vector2D & left, const Vector2D & right, 
+		double height, double max_speed, double max_force, 
+		double curr);
+
 private:
 	void set_block(void);
 	double height_; // maybe we don't need it.
