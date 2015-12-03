@@ -6,6 +6,13 @@ void Player::set_block(void)
 	b = a + Vector2D(0.0, height_);
 }
 
+Player::Player()
+:
+	Player(Vector2D(), Vector2D(), 0.0, 0.0, 0.0)
+{
+	
+}
+
 Player::Player(const Vector2D &left, const Vector2D &right, double height,
 	double max_speed, double max_force, double curr) 
 :

@@ -10,10 +10,14 @@
 class Player : public Movable, public Block
 {
 public:
+	Player();
 	Player(const Vector2D &left, const Vector2D &right, double height,
 		double max_speed, double max_force, double curr = 0.5);
 	virtual ~Player() = 0;
 
+	virtual void init(const Vector2D &left, const Vector2D &right, 
+		double height, double max_speed, double max_force, 
+		double curr) = 0;
 	virtual void move(double dt) override;
 	virtual void idle(void);
 	virtual Vector2D get_force(void);
