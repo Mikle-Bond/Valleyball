@@ -40,22 +40,29 @@ class Manager : private Factory
 {
 public:
 	static Manager& getSingleton();
+	static bool resetSingleton();
 	// We should catch the objects, and not allow 
 	// to the others to manage them outside,
 	// not through the manager.
 	
+	enum ExitStatus { OK, COLLISION, GAME_OVER = 0x0 };
+
 	// Nets
 	Block & addNet(const std::string & name);
-	const Block & getNet(const std::string & name);
+	const Block & getNet(const std::string & name) const;
 	// Blocks
 	Block & addBlock(const std::string & name, const std::string & obeyer);
-	const Block & getBlock(const std::string & name);
+	const Block & getBlock(const std::string & name) const;
 	// Players
 	Player & addPlayer(const std::string & name, const std::string & type);
-	const Player & getPlayer(const std::string & name);
+	const Player & getPlayer(const std::string & name) const;
 	// Balls
 	Ball & addBall(const std::string & name);
-	const Ball & getBall(const std::string & name);
+	const Ball & getBall(const std::string & name) const;
+
+	// Frame update
+	ExitStatus nextFrame(void);
+	void setStep(double new_dt);
 
 private:
 	Manager();
@@ -91,8 +98,8 @@ private:
 	std::map<std::string, Block *> net_tab;
 	std::map<std::string, ball_t> ball_tab;
 	std::map<std::string, block_t> block_tab;
-};
 
-Manager * Manager::single = nullptr;
+	double dt_;
+};
 
 #endif // MANAGER_H 
