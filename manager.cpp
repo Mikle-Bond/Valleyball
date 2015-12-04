@@ -1,6 +1,7 @@
 #include "manager.h"
 
 Manager * Manager::single = nullptr;
+Manager::State Manager::state_;
 
 namespace {
 
@@ -21,6 +22,11 @@ public:
 static ManagerDestroyer ManagerDestroyerClass;
 
 } // namespace
+
+Manager::Manager()
+{
+	state_.currentStatus = Status::NOT_STARTED;
+}
 
 Manager& Manager::getSingleton()
 {
@@ -93,8 +99,12 @@ const Block & Manager::getBlock(const std::string & name) const
 	return *(block_tab.at(name).obj);
 }
 
-Manager::ExitStatus Manager::nextFrame()
+Manager::Status Manager::nextFrame()
 {
+	if (state_.currentStatus == Status::GAME_OVER)
+		return Status::GAME_OVER;
+	state_.currentStatus = Status::OK;
+
 	// check for collisions of balls
 	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
 		Ball * bll = ball_iter->second.obj;
@@ -102,14 +112,22 @@ Manager::ExitStatus Manager::nextFrame()
 	  	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
 			Block * net = net_iter->second;
 			if (bll->IsCrossing(*net)) {
-				// (bll->second).plr is looser;
+				state_.currentStatus = Status::GAME_OVER;
+				state_.playerName = getLoserName((ball_iter->second).plr);
+				state_.ballName = &(ball_iter->first);
+				state_.blockName = &(net_iter->first);
+				return Status::GAME_OVER;
 			}
 		}	
 		// ... with walls
 	  	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
 			Block * blk = (block_iter->second).obj;
 			if (bll->IsCrossing(*blk)) {
-				// (blk->second).plr is looser;
+				state_.currentStatus = Status::GAME_OVER;
+				state_.playerName = getLoserName((block_iter->second).plr);
+				state_.ballName = &(ball_iter->first);
+				state_.blockName = &(block_iter->first);
+				return Status::GAME_OVER;
 			}
 		}
 		// ... with players
@@ -119,6 +137,12 @@ Manager::ExitStatus Manager::nextFrame()
 				bll->push(plr->get_force(), dt_);
 				// In the perfect world there should be the pointer to the ball, 
 				// as a paraneter to .get_force(), but I'll do this later.
+				state_.currentStatus = Status::ATTACK;
+				state_.ballName = &(ball_iter->first);
+				state_.playerName = &(plr_iter->first);
+				state_.blockName = nullptr;
+				ball_iter->second.plr = plr;
+				// notice that here is no return.
 			}
 			plr->idle();
 			plr->move(dt_);
@@ -127,13 +151,32 @@ Manager::ExitStatus Manager::nextFrame()
 		bll->move(dt_);
 	} 
 
-	return ExitStatus::OK;
+	return state_.currentStatus;
 }
 
 void Manager::setStep(double new_dt)
 {
 	if (new_dt >= 0.0)
 		dt_ = new_dt;
+}
+
+double Manager::getStep() const
+{
+	return dt_;
+}
+
+const Manager::State & Manager::getState()
+{
+	return state_;
+}
+
+const std::string * Manager::getLoserName(const Player * plr) const
+{
+	for (auto it = player_tab.begin(); it != player_tab.end(); ++it) {
+		if (plr == it->second)
+			return &(it->first);
+	}
+	return nullptr;
 }
 
 Manager::~Manager()
@@ -150,5 +193,6 @@ Manager::~Manager()
 	for (auto i = net_tab.begin(); i != net_tab.end(); ++i) {
 		delete i->second;
 	}
+	state_.currentStatus = Status::DESTROYED;
 }
 
