@@ -6,6 +6,13 @@ void Player::set_block(void)
 	b = a + Vector2D(0.0, height_);
 }
 
+Player::Player()
+:
+	Player(Vector2D(), Vector2D(), 0.0, 0.0, 0.0)
+{
+	
+}
+
 Player::Player(const Vector2D &left, const Vector2D &right, double height,
 	double max_speed, double max_force, double curr) 
 :
@@ -21,6 +28,17 @@ Player::Player(const Vector2D &left, const Vector2D &right, double height,
 Player::~Player()
 {
 
+}
+
+void Player::initDefault(const Vector2D &left, const Vector2D &right, 
+	double height, double max_speed, double max_force, 
+	double curr)
+{
+	height_ = height;
+	max_speed_ = max_speed;
+	max_force_ = max_force;
+	Movable::initMovable(left, right, (right - left) * curr + left, Vector2D());
+	set_block();
 }
 
 void Player::move(double dt)
