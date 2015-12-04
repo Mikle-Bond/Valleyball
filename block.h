@@ -7,8 +7,9 @@
  */
 
 #include "vector2d.h"
+#include "renderinterface.h"
 
-struct Block
+struct Block : public RenderInterface
 {
 	explicit Block(
 		double ax = 0.0,
@@ -16,6 +17,7 @@ struct Block
 		double bx = 0.0,
 		double by = 0.0);
 	Block (const Vector2D &_a, const Vector2D &_b);
+	virtual void draw() const override;
 	virtual ~Block();
 
 	Vector2D a, b;
