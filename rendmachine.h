@@ -7,13 +7,15 @@
 class RenderMachine
 {
 public:
+	virtual ~RenderMachine() = 0;
 	virtual void init();
 	virtual void start();
+
+protected:
 	virtual void beforeUpdate();
 	virtual void update();
 	virtual void afterUpdate();
 	virtual void stop();
-	virtual ~RenderMachine() = 0;
 };
 
 #endif // RENDER_MACHINE_H
