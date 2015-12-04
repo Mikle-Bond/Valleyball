@@ -46,11 +46,11 @@ public:
 	// not through the manager.
 	
 	enum Status { 
-		OK, 
-		ATTACK, 
-		GAME_OVER = 0x0, 
-		NOT_STARTED, 
-	       	DESTROYED
+		OK, 			// stands for no special state
+		ATTACK, 		// one or more players touched the ball
+		GAME_OVER = 0x0, 	// ball contacted with surface
+		NOT_STARTED, 		// manager is ready to begin
+	       	DESTROYED		// manager is seted down
 	};
 	struct State {
 		Status currentStatus = Status::DESTROYED;
