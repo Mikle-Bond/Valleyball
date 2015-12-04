@@ -30,6 +30,15 @@ void Movable::move(double dt)
 	if (position_.y > rt_edge_.y)
 		position_.y = rt_edge_.y;
 }
+	
+void Movable::initMovable(const Vector2D & left, const Vector2D & right, 
+	const Vector2D & position, const Vector2D & st_speed)
+{
+	lb_edge_ = left;
+	rt_edge_ = right;
+	position_ = position;
+	speed = st_speed;
+}
 
 Movable::~Movable() {}
 

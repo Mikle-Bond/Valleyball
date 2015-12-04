@@ -1,11 +1,13 @@
 #ifndef MANAGER_H
 #define MANAGER_H 
 
-#include <vector>
+#include <map>
 #include <string>
 #include "vector2d.h"
+#include "ball.h"
 #include "block.h"
 #include "player.h"
+#include "factory.h"
 
 /* Ok. Manager can manage. After giving him the beginning configuration
  * we can change nothing. So, The basic usage is to place needed objects
@@ -25,7 +27,7 @@
  *
  * To catch the end of the game, we are looking for collisions of ball
  * and block, and if we found it, we are looking to who obey this block.
- * This Player *is *loser.
+ * This Player *is* loser.
  *
  * The special kind of Block is Net. There is no need for another 
  * class for it. The only differance is that Net 'belongs' to player,
@@ -34,34 +36,60 @@
 
 class Ball;
 
-class Manager 
+class Manager : private Factory 
 {
 public:
 	static Manager& getSingleton();
+	static bool resetSingleton();
 	// We should catch the objects, and not allow 
 	// to the others to manage them outside,
 	// not through the manager.
-	// So, I think it is nice place for moving semantics.
 	
-	void addNet(Block *net);
-	void addBlock(Block *blk, const std::string & obeyer);
-	void addPlayer(Player *plr, const std::string & name);
-	void addBall(Ball *bll);
+	enum Status { 
+		OK, 			// stands for no special state
+		ATTACK, 		// one or more players touched the ball
+		GAME_OVER = 0x0, 	// ball contacted with surface
+		NOT_STARTED, 		// manager is ready to begin
+	       	DESTROYED		// manager is seted down
+	};
+	struct State {
+		Status currentStatus = Status::DESTROYED;
+		const std::string * playerName = nullptr;
+		const std::string * ballName = nullptr;
+		const std::string * blockName = nullptr;
+	};
 
-	// Ok, here is the first big crutch:
-	// The section with methods for two-players game!
-	const Player * getAnotherPlayer(const Player * t);
-	// To explain this functions, we need to understand game
-	// as battle between *two* players. 
-	// But the manager was written to manage *many* players. So, 
-	// I need to make up this place, 'cos it's confusing.
+	// Nets
+	Block & addNet(const std::string & name);
+	const Block & getNet(const std::string & name) const;
+	// Blocks
+	Block & addBlock(const std::string & name, const std::string & obeyer);
+	const Block & getBlock(const std::string & name) const;
+	// Players
+	Player & addPlayer(const std::string & name, const std::string & type);
+	const Player & getPlayer(const std::string & name) const;
+	// Balls
+	Ball & addBall(const std::string & name);
+	const Ball & getBall(const std::string & name) const;
+
+	// Frame update
+	Status nextFrame(void);
+	void setStep(double new_dt);
+	double getStep() const;
+
+	static const State & getState();
 
 private:
 	Manager();
 	Manager(const Manager &);	
 	~Manager();
 
+	// Used fo correct end of game.
+	const std::string * getLoserName(const Player * plr) const;
+
 	static Manager * single;
+
+	static State state_;
 
 	// Here ve have a list for each kind of objects.
 	// To ease handling them, we can put them into
@@ -78,21 +106,19 @@ private:
 	// As was mentioned, we need "nets".
 	// But we will handle them as all others Blocks,
 	// marking them as owned by (nullptr)
-	std::vector<block_t> block_tab;
-	std::vector<ball_t> ball_tab;
 	
 	struct player_t {
 		Player *plr;
 		std::string name;
 	};
 
-	std::vector<player_t> player_tab;
+	// Each element has its identifier, whitch is a name of element.
+	std::map<std::string, Player *> player_tab;
+	std::map<std::string, Block *> net_tab;
+	std::map<std::string, ball_t> ball_tab;
+	std::map<std::string, block_t> block_tab;
 
-	// Names
-	Player * getPlayer(const std::string & str); // returns nullptr if not in name_tab
-	
+	double dt_;
 };
-
-Manager * Manager::single = nullptr;
 
 #endif // MANAGER_H 
