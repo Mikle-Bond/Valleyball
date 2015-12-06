@@ -3,9 +3,9 @@
 Movable::Movable(const Vector2D &left, const Vector2D &right, 
 	const Vector2D &st_position, const Vector2D &st_speed)
 :
-    lWall_(left),
-    rWall_(right),
-    Pos_(st_position),
+	lb_edge_(left),
+	rt_edge_(right),
+	position_(st_position),
 	speed(st_speed)
 {
 
@@ -13,35 +13,23 @@ Movable::Movable(const Vector2D &left, const Vector2D &right,
 
 Vector2D Movable::get_pos(void)
 {
-    return Pos_;
-}
-void Movable::changeXdir()
-{
-    speed.x = -speed.x;
-}
-void Movable::changeYdir()
-{
-    speed.y = -speed.y;
+	return position_;
 }
 
 bool Movable::move(double dt)
 {
-    if(GameWorld.InBox(Pos))
-    {
-        Vector2D offset = speed * dt;
-        Pos += offset;
-        return true;
-    }
-
-    if (Pos_.x < GamesWorld.lWall.x)
-        Pos_.x = GamesWorld.lWall.x;
-    if (Pos_.y < GamesWorld.lWall.y)
-        Pos_.y = GamesWorld.lWall.y;
-    if (Pos_.x > GamesWorld.rWall.x)
-        Pos_.x = GamesWorld.rWall.x;
-    if (Pos_.y > GamesWorld.rWall.y)
-        Pos_.y = GamesWorld.rWall.y;
-    return false;
+    Vector2D old_pos = position_;
+	Vector2D offset = speed * dt;
+	position_ += offset;
+	if (position_.x < lb_edge_.x)
+		position_.x = lb_edge_.x;
+	if (position_.y < lb_edge_.y)
+		position_.y = lb_edge_.y;
+	if (position_.x > rt_edge_.x)
+		position_.x = rt_edge_.x;
+	if (position_.y > rt_edge_.y)
+		position_.y = rt_edge_.y;
+    return position_ == old_pos;
 }
 
 Movable::~Movable() {}
