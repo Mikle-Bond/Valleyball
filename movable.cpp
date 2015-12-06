@@ -1,19 +1,27 @@
 ﻿#include "movable.h"
-#if 0
+
 Movable::Movable(const Vector2D &left, const Vector2D &right, 
 	const Vector2D &st_position, const Vector2D &st_speed)
 :
-	lb_edge_(left),
-	rt_edge_(right),
-	position_(st_position),
+    lWall_(left),
+    rWall_(right),
+    Pos_(st_position),
 	speed(st_speed)
 {
 
 }
-#endif
+
 Vector2D Movable::get_pos(void)
 {
-    return Pos;
+    return Pos_;
+}
+void Movable::changeXdir()
+{
+    speed.x = -speed.x;
+}
+void Movable::changeYdir()
+{
+    speed.y = -speed.y;
 }
 
 bool Movable::move(double dt)
@@ -25,14 +33,14 @@ bool Movable::move(double dt)
         return true;
     }
 
-    if (Pos.x < GamesWorld.lWall.a.x)
-        Pos.x = GamesWorld.lWall.a.x;
-    if (Pos.y < GamesWorld.lWall.a.y)
-        Pos.y = GamesWorld.lWall.a.y;
-    if (Pos.x > GamesWorld.rWall.b.x)
-        Pos.x = GamesWorld.rWall.b.x;
-    if (Pos.y > GamesWorld.rWall.b.y)
-        Pos.y = GamesWorld.rWall.b.y;
+    if (Pos_.x < GamesWorld.lWall.x)
+        Pos_.x = GamesWorld.lWall.x;
+    if (Pos_.y < GamesWorld.lWall.y)
+        Pos_.y = GamesWorld.lWall.y;
+    if (Pos_.x > GamesWorld.rWall.x)
+        Pos_.x = GamesWorld.rWall.x;
+    if (Pos_.y > GamesWorld.rWall.y)
+        Pos_.y = GamesWorld.rWall.y;
     return false;
 }
 

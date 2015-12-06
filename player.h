@@ -4,6 +4,7 @@
 #include "vector2d.h"
 #include "block.h"
 #include "movable.h"
+#include "manager.h"
 
 
 // Here we mean position of the Movable as a Block.a
@@ -14,13 +15,16 @@ public:
         double max_speed, double max_force, double curr = 0.5);
 	virtual ~Player() = 0;
 
-	virtual void move(double dt) override;
+    virtual bool move(double dt) override;
 	virtual void idle(void);
-	virtual Vector2D get_force(void);
+    virtual Vector2D get_force(Manager &Mng);
+
+protected:
+    double get_max_force() const;
 
 private:
 	void set_block(void);
-	double height_; // maybe we don't need it.
+    double height_;
 	double max_force_;
 	double max_speed_;
 };

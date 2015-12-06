@@ -6,6 +6,11 @@ void Player::set_block(void)
 	b = a + Vector2D(0.0, height_);
 }
 
+double Player::get_max_force() const
+{
+    return max_force_;
+}
+
 Player::Player(const Vector2D &left, const Vector2D &right, double height,
 	double max_speed, double max_force, double curr) 
 :
@@ -23,9 +28,10 @@ Player::~Player()
 
 }
 
-void Player::move(double dt)
+bool Player::move(double dt)
 {
-	Movable::move(dt);
+    bool isOk = Movable::move(dt);
 	set_block();
+    return isOk;
 }
 
