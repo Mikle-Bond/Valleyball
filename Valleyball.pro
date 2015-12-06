@@ -22,6 +22,7 @@ HEADERS += \
     player.h \ 
     sam.h \
     movable.h \
-    manager.h
+    manager.h \
+    equation.h
 
 
