@@ -20,6 +20,10 @@ public:
 
 	// Can be canged outside. In geberal.
 	Vector2D speed;
+
+protected:
+	void initMovable(const Vector2D & left, const Vector2D & right, 
+		const Vector2D & position, const Vector2D & st_speed);
 private:
 	Vector2D position_;
 	Vector2D lb_edge_;

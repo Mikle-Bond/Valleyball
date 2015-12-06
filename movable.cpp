@@ -1,12 +1,13 @@
 ﻿#include "movable.h"
 
+
 Movable::Movable(const Vector2D &left, const Vector2D &right, 
 	const Vector2D &st_position, const Vector2D &st_speed)
 :
-	lb_edge_(left),
-	rt_edge_(right),
+	speed(st_speed),
 	position_(st_position),
-	speed(st_speed)
+	lb_edge_(left),
+	rt_edge_(right)
 {
 
 }
@@ -30,6 +31,15 @@ bool Movable::move(double dt)
 	if (position_.y > rt_edge_.y)
 		position_.y = rt_edge_.y;
     return position_ == old_pos;
+}
+	
+void Movable::initMovable(const Vector2D & left, const Vector2D & right, 
+	const Vector2D & position, const Vector2D & st_speed)
+{
+	lb_edge_ = left;
+	rt_edge_ = right;
+	position_ = position;
+	speed = st_speed;
 }
 
 Movable::~Movable() {}
