@@ -1,4 +1,4 @@
-#include "player.h"
+﻿#include "player.h"
 
 void Player::set_block(void)
 {
@@ -6,11 +6,16 @@ void Player::set_block(void)
 	b = a + Vector2D(0.0, height_);
 }
 
+double Player::getMaxForce() const
+{
+    return max_force_;
+}
+
 Player::Player()
 :
 	Player(Vector2D(), Vector2D(), 0.0, 0.0, 0.0)
 {
-	
+
 }
 
 Player::Player(const Vector2D &left, const Vector2D &right, double height,
@@ -41,9 +46,10 @@ void Player::initDefault(const Vector2D &left, const Vector2D &right,
 	set_block();
 }
 
-void Player::move(double dt)
+bool Player::move(double dt)
 {
-	Movable::move(dt);
+    bool isOk = Movable::move(dt);
 	set_block();
+    return isOk;
 }
 

@@ -1,4 +1,4 @@
-#include "movable.h"
+﻿#include "movable.h"
 
 
 Movable::Movable(const Vector2D &left, const Vector2D &right, 
@@ -17,8 +17,9 @@ Vector2D Movable::get_pos(void) const
 	return position_;
 }
 
-void Movable::move(double dt)
+bool Movable::move(double dt)
 {
+    Vector2D old_pos = position_;
 	Vector2D offset = speed * dt;
 	position_ += offset;
 	if (position_.x < lb_edge_.x)
@@ -29,6 +30,7 @@ void Movable::move(double dt)
 		position_.x = rt_edge_.x;
 	if (position_.y > rt_edge_.y)
 		position_.y = rt_edge_.y;
+    return position_ == old_pos;
 }
 	
 void Movable::initMovable(const Vector2D & left, const Vector2D & right, 
