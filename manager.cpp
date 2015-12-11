@@ -1,4 +1,4 @@
-#include "manager.h"
+﻿#include "manager.h"
 
 Manager * Manager::single = nullptr;
 Manager::State Manager::state_;

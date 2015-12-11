@@ -1,10 +1,10 @@
-﻿#include "sam.h"
+﻿#include "dan.h"
 #include "manager.h"
 #include "equation.h"
 #include <math.h>
-PEGISTRATE_PLAYER(SamThePlayer);
+PEGISTRATE_PLAYER(DanThePlayer);
 // it is not very wrong, but don't complete
-double SamThePlayer::were(Ball& ball)
+double DanThePlayer::were(Ball& ball)
 {
 
 
@@ -21,7 +21,7 @@ double SamThePlayer::were(Ball& ball)
         {
             t = PositiveRoot(1, 2 * ball.get_speed().y / ball.get_accel().y, - 2 * ball.get_pos().y / ball.get_accel().y);
         }
-        return ball.get_pos().x + ball.get_speed().x * t;
+        return ball.get_pos().x + ball.get_speed().x * t + 0.01;
 
 }
 
@@ -30,7 +30,7 @@ double SamThePlayer::were(Ball& ball)
 //return vector, which means angle, by which we need push the ball
 //i suзpouse that x-position of net == 0
 // i need have strong think about it
-Vector2D SamThePlayer::How()
+Vector2D DanThePlayer::How()
 {
     double x1 = 0, ym = 0;
     double vy;
@@ -40,12 +40,12 @@ Vector2D SamThePlayer::How()
     {
         if(side)
         {
-            x1 = (1 + x1) / 2;
+            x1 = (0.05 + x1) / 2;
             ym = Manager::getNet("twall").b.y - (i + 1) * Manager::getBall("ball").get_Radius();
         }
         else
         {
-            x1 = (-1 + x1) / 2;
+            x1 = (-0.05 + x1) / 2;
             ym = Manager::getNet("net").b.y + (i + 1) * Manager::getBall("ball").get_Radius();
         }
         vy = sqrt(Manager::getBall("ball").accel().y * 2 * ym);
@@ -58,29 +58,29 @@ Vector2D SamThePlayer::How()
     return Vector2D(0., 0.);
 }
 
-SamThePlayer::SamThePlayer(const Vector2D &left, const Vector2D &right, bool Side = false)
+SamThePlayer::DanThePlayer(const Vector2D &left, const Vector2D &right, bool Side = true)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
 
 }
-void init(const Vector2D &left, const Vector2D &right,
+void DanThePlayer::init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr)
 {
     height_ = height;
     max_speed_ = max_speed;
     max_force_ = max_force;
-    Movable::initMovable(left, right, (right - left) * curr + right, Vector2D());
+    Movable::initMovable(left, right, (right - left) * curr + left, Vector2D());
     set_block();
 }
 
-bool SamThePlayer::move(double dt)
+bool DanThePlayer::move(double dt)
 {
 
 }
 
-void SamThePlayer::idle()
+void DanThePlayer::idle()
 {
     double x = were(Manager::getBall("ball"));
     double vx = x / Manager::getStep();
@@ -92,13 +92,14 @@ void SamThePlayer::idle()
 
 
 
-Vector2D SamThePlayer::get_force()
+Vector2D DanThePlayer::get_force()
 {
     return How() / Mng.getStep();
-	// Here:
-	// bPos -- position vector
-	// bSpd -- speed vector 
-	// bAcc -- acceleration vector
-	
+    // Here:
+    // bPos -- position vector
+    // bSpd -- speed vector
+    // bAcc -- acceleration vector
+
 }
+
 
