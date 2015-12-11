@@ -1,4 +1,4 @@
-#ifndef MOVABLE_H
+﻿#ifndef MOVABLE_H
 #define MOVABLE_H
 
 #include "vector2d.h"
@@ -16,7 +16,7 @@ public:
 	Vector2D get_pos(void) const;
 
 	// Moving block on speed*dt
-	virtual void move(double dt); 	
+    virtual bool move(double dt);
 
 	// Can be canged outside. In geberal.
 	Vector2D speed;

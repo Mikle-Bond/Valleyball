@@ -25,7 +25,7 @@ public:
 
 protected:
     double getMaxForce() const;
-
+    double getMaxSpeed() const;
 protected:
 	void initDefault(const Vector2D & left, const Vector2D & right, 
 		double height, double max_speed, double max_force, 

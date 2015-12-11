@@ -10,6 +10,10 @@ double Player::getMaxForce() const
 {
     return max_force_;
 }
+double Player::getMaxSpeed()
+{
+    return max_speed_;
+}
 
 Player::Player()
 :
