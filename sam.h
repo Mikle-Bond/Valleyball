@@ -20,6 +20,7 @@ public:
             double height, double max_speed, double max_force,
             double curr) = 0;
 
+
     Vector2D get_force();
     virtual bool move(double dt);
 	virtual void idle(void);

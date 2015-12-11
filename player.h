@@ -21,11 +21,11 @@ public:
 		double curr) = 0;
     virtual bool move(double dt) override;
     virtual void idle(void);
-    virtual Vector2D get_force(Manager &Mng);
+    virtual Vector2D get_force();
 
 protected:
     double getMaxForce() const;
-
+    double getMaxSpeed() const;
 protected:
 	void initDefault(const Vector2D & left, const Vector2D & right, 
 		double height, double max_speed, double max_force, 

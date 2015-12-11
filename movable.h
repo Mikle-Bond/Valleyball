@@ -1,4 +1,4 @@
-#ifndef MOVABLE_H
+﻿#ifndef MOVABLE_H
 #define MOVABLE_H
 
 #include "vector2d.h"

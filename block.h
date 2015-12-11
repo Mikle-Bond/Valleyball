@@ -1,4 +1,4 @@
-#ifndef BLOCK_H
+﻿#ifndef BLOCK_H
 #define BLOCK_H
 /* Here block means a flat plane in 2D (line, to be honest).
  * That's why here we need to know only two points to handle it.

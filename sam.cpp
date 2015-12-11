@@ -3,6 +3,8 @@
 #include "equation.h"
 #include <math.h>
 PEGISTRATE_PLAYER(SamThePlayer);
+
+
 // it is not very wrong, but don't complete
 double SamThePlayer::were(Ball& ball)
 {
@@ -51,7 +53,7 @@ Vector2D SamThePlayer::How()
         vy = sqrt(Manager::getBall("ball").accel().y * 2 * ym);
         vx = x1 * sqrt(Manager::getBall("ball").accel().y / (ym * 2)) / 2;
 
-        if((vx*vx + vy*vy) < get_max_force() * Manager::getStep() / Manager::getBall("ball").get_Mass())
+        if((vx*vx + vy*vy) < getMaxForce() * Manager::getStep() / Manager::getBall("ball").get_Mass())
             return Vector2D(vx, vy);
     }
 
@@ -68,11 +70,7 @@ void init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr)
 {
-    height_ = height;
-    max_speed_ = max_speed;
-    max_force_ = max_force;
-    Movable::initMovable(left, right, (right - left) * curr + right, Vector2D());
-    set_block();
+    initDefault(left, right, height, max_speed, max_force,curr);
 }
 
 bool SamThePlayer::move(double dt)
