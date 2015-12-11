@@ -30,7 +30,7 @@ double SamThePlayer::were(Ball& ball)
 //return vector, which means angle, by which we need push the ball
 //i suзpouse that x-position of net == 0
 // i need have strong think about it
-Vector2D SamThePlayer::How(Manager &mng)
+Vector2D SamThePlayer::How()
 {
     double x1 = 0, ym = 0;
     double vy;
@@ -41,17 +41,18 @@ Vector2D SamThePlayer::How(Manager &mng)
         if(side)
         {
             x1 = (1 + x1) / 2;
-            ym = mng.get_top.b.y - (i + 1) * mng.get_ball().get_Radius();
+            ym = Manager::getNet("twall").b.y - (i + 1) * Manager::getBall("ball").get_Radius();
         }
         else
         {
             x1 = (-1 + x1) / 2;
-            ym = mng.get_net.b.y + (i + 1) * mng.get_ball().get_Radius();
+            ym = Manager::getNet("net").b.y + (i + 1) * Manager::getBall("ball").get_Radius();
         }
-        vy = sqrt(mng.get_ball().accel().y * 2 * ym);
-        vx = x1 * sqrt(mng.get_ball().accel().y / (ym * 2)) / 2;
+        vy = sqrt(Manager::getBall("ball").accel().y * 2 * ym);
+        vx = x1 * sqrt(Manager::getBall("ball").accel().y / (ym * 2)) / 2;
 
-        if((vx*vx + vy*vy) < get_max_force() * mng.getStep() / mng.getBall().get_Mass()) return Vector2D(vx, vy);
+        if((vx*vx + vy*vy) < get_max_force() * Manager::getStep() / Manager::getBall("ball").get_Mass())
+            return Vector2D(vx, vy);
     }
 
     return Vector2D(0., 0.);
@@ -74,9 +75,19 @@ void init(const Vector2D &left, const Vector2D &right,
     side = false;
 }
 
-
-void SamThePlayer::idle(void)
+bool SamThePlayer::move(double dt)
 {
+
+}
+
+void SamThePlayer::idle()
+{
+    double x = were(Manager::getBall("ball"));
+    double vx = x / Manager::getStep();
+    if(vx < max_speed_)
+        speed = Vector2D(x / Manager::getStep(), 0);
+    else
+        speed = Vector2D(max_speed_, 0);
 }
 
 
