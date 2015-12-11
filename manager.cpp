@@ -118,7 +118,7 @@ Manager::Status Manager::nextFrame()
 				state_.blockName = &(net_iter->first);
 				return Status::GAME_OVER;
 			}
-		}	
+		}
 		// ... with walls
 	  	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
 			Block * blk = (block_iter->second).obj;
@@ -144,12 +144,24 @@ Manager::Status Manager::nextFrame()
 				ball_iter->second.plr = plr;
 				// notice that here is no return.
 			}
-			plr->idle();
-			plr->move(dt_);
 		}
 		// ... with fouth dimention
 		bll->move(dt_);
+		bll->draw();
 	} 
+
+	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
+		Player * plr = plr_iter->second;
+		plr->idle();
+		plr->move(dt_);
+		plr->draw();
+	}
+	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
+		net_iter->second->draw();
+	}
+	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
+		(block_iter->second).obj->draw();
+	}
 
 	return state_.currentStatus;
 }

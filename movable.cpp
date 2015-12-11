@@ -12,7 +12,7 @@ Movable::Movable(const Vector2D &left, const Vector2D &right,
 
 }
 
-Vector2D Movable::get_pos(void)
+Vector2D Movable::get_pos(void) const
 {
 	return position_;
 }
