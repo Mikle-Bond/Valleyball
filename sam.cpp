@@ -63,6 +63,16 @@ SamThePlayer::SamThePlayer(const Vector2D &left, const Vector2D &right, bool Sid
 {
 
 }
+void init(const Vector2D &left, const Vector2D &right,
+            double height, double max_speed, double max_force,
+            double curr)
+{
+    this->initMovable(left, right, Vector2D(0.5, 0), Vector2D());
+    height_ = height;
+    max_force_ = max_force;
+    max_speed_ = max_speed;
+    side = false;
+}
 
 
 void SamThePlayer::idle(void)
