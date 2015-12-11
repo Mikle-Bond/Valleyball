@@ -27,7 +27,14 @@ void TextRender::init()
 	mgr->addNet("rwall") = Block( 1.0, 0.0,  1.0, 1.0);
 	mgr->addNet("twall") = Block(-1.0, 1.0,  1.0, 1.0);
 	mgr->addNet("net")   = Block( 0.0, 0.0,  0.0, 0.5);
-	bll = &(mgr->addBall("ball") = Ball()); // TODO: Ball initialization
+	bll = 
+		&(mgr->addBall("ball") = Ball(
+				Vector2D(-1.0, 0.0), 
+				Vector2D(1.0, 1.0), 
+				Vector2D(-0.5, 0.7), 
+				Vector2D())
+		); // TODO: Ball initialization
+	// bll = &(mgr->addBall("ball") = Ball()); // TODO: Ball initialization
 	lplr = &(mgr->getPlayer("left"));
 	rplr = &(mgr->getPlayer("right"));
 }
@@ -48,7 +55,7 @@ void TextRender::update()
 	std::cout 
 		<< "left: " << lplr->get_pos().x
 		<< " right: " << rplr->Movable::get_pos().x
-		<< " ball: ( " << bll->get_x() << ", " << bll->get_y() << " )"
+		<< " ball: ( " << bll->get_pos().x << ", " << bll->get_pos().y << " )"
 		<< std::endl;
 }
 
@@ -73,12 +80,12 @@ void Block::draw() const
 {
 
 }
-
+/*
 void Ball::draw() const
 {
 
 }
-
+*/
 #ifdef DEBUG
 int main ()
 {

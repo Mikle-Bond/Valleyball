@@ -6,23 +6,24 @@ CONFIG += C++11
 DEFINES += "DEBUG"
 
 SOURCES += \
-    sfmlrender.cpp \
+    textrender.cpp \
     vector2d.cpp \
     block.cpp \
     player.cpp \
     sam.cpp \
     movable.cpp \
     manager.cpp \
+    equation.cpp \
     dan.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
 
-LIBS += -lsfml
+# LIBS += -lsfml
 
 HEADERS += \
     ball.h \
-    sfmlrender.h \
+    textrender.h \
     vector2d.h \
     block.h \
     player.h \ 

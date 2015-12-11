@@ -42,6 +42,7 @@ protected:
 #define PEGISTRATE_PLAYER(name)					\
 class name##Factory : public PlayerFactory			\
 {								\
+public:								\
 	Player * create() {					\
 		return new name();				\
 	}							\

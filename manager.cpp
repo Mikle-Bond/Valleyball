@@ -103,13 +103,17 @@ Ball & Manager::addBall(const std::string & name)
 {
 	if (ball_tab.count(name) > 0)
 		throw; // Ball is already exist.
-	Ball * bll = new Ball()
-	ball_tab.insert(std::make_pair(name, ))
+	Ball * bll = new Ball();
+	ball_t y;
+	y.plr = nullptr;
+	y.obj = bll;
+	ball_tab.insert(std::make_pair(name, y));
+	return *bll;
 }
 
 const Ball & Manager::getBall(const std::string & name) const
 {
-
+	return *(ball_tab.at(name).obj);
 }
 
 Manager::Status Manager::nextFrame()
@@ -160,7 +164,7 @@ Manager::Status Manager::nextFrame()
 		}
 		// ... with fouth dimention
 		bll->move(dt_);
-		bll->draw();
+		// bll->draw();
 	} 
 
 	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
