@@ -29,7 +29,10 @@ public:
 	static void registerType(const std::string & type, PlayerFactory * handler);
 protected:
 	Factory();
-	static std::map<std::string, PlayerFactory *> factories;
+	typedef std::map<std::string, PlayerFactory *> FactMap;
+	static FactMap & factories; 		// just a shortcut
+protected:
+	static FactMap & factoriesContainer();	// contain static object
 };
 
 // Purpose to use define-macro instead of template 
