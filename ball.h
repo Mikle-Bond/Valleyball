@@ -21,8 +21,8 @@ public:
     Ball(const Vector2D &left, const Vector2D &right,
          const Vector2D &st_position, const Vector2D &st_speed,\
          Vector2D accel = Vector2D(0, 0.0981), double mass = 1, double radius = 0.01)\
-        :Movable(left, right, st_position, st_speed), X0Y0(st_position),acceleration(accel)\
-        ,_mass(mass),_Radius(radius)
+        :Movable(left, right, st_position, st_speed), acceleration(accel)\
+        ,_mass(mass),_Radius(radius), X0Y0(st_position)
     {
     }
     ~Ball(){}
