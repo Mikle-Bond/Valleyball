@@ -13,10 +13,10 @@ public:
 	Movable(const Vector2D &left, const Vector2D &right, 
 		const Vector2D &st_position, const Vector2D &st_speed);
 	virtual ~Movable() = 0;
-	Vector2D get_pos(void);
+	Vector2D get_pos(void) const;
 
 	// Moving block on speed*dt
-	virtual void move(double dt); 	
+	virtual bool move(double dt); 	
 
 	// Can be canged outside. In geberal.
 	Vector2D speed;
