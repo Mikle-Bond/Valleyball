@@ -8,7 +8,12 @@ void Player::set_block(void)
 
 double Player::getMaxForce() const
 {
-    return max_force_;
+	return max_force_;
+}
+
+double Player::getMaxSpeed() const
+{
+	return max_speed_;
 }
 
 Player::Player()
@@ -48,8 +53,8 @@ void Player::initDefault(const Vector2D &left, const Vector2D &right,
 
 bool Player::move(double dt)
 {
-    bool isOk = Movable::move(dt);
+	bool isOk = Movable::move(dt);
 	set_block();
-    return isOk;
+	return isOk;
 }
 
