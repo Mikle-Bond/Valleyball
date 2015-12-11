@@ -28,5 +28,7 @@ Vector2D operator -(const Vector2D &lt, const Vector2D &rt);
 Vector2D operator *(const Vector2D &lt, double a);
 Vector2D operator *(double a, const Vector2D &rt);
 
+bool operator==(const Vector2D &lt, const Vector2D &rt);
+
 #endif // VECTOR2D_H
 
