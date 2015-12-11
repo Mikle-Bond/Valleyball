@@ -19,13 +19,13 @@ public:
 	virtual void init(const Vector2D &left, const Vector2D &right, 
 		double height, double max_speed, double max_force, 
 		double curr) = 0;
-    virtual bool move(double dt) override;
-    virtual void idle(void);
-    virtual Vector2D get_force();
+	virtual bool move(double dt) override;
+	virtual void idle(void);
+	virtual Vector2D get_force();
 
 protected:
-    double getMaxForce() const;
-    double getMaxSpeed() const;
+	double getMaxForce() const;
+	double getMaxSpeed() const;
 protected:
 	void initDefault(const Vector2D & left, const Vector2D & right, 
 		double height, double max_speed, double max_force, 
@@ -33,15 +33,10 @@ protected:
 
 private:
 	void set_block(void);
-    double height_;
+	double height_;
 	double max_force_;
 	double max_speed_;
 };
 
-
-
-
-
 #endif // PLAYER_H
-
 
