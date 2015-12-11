@@ -2,7 +2,7 @@
 #include "manager.h"
 #include "equation.h"
 #include <math.h>
-
+PEGISTRATE_PLAYER(SamThePlayer);
 // it is not very wrong, but don't complete
 double SamThePlayer::were(Ball& ball)
 {

@@ -1,7 +1,5 @@
 ﻿#include "manager.h"
 
-REGISTRATE_PLAYER(MyPlayer);
-
 Manager * Manager::single = nullptr;
 Manager::State Manager::state_;
 
