@@ -64,6 +64,11 @@ Vector2D operator *(double a, const Vector2D &rt)
     return temp;
 }
 
+bool operator==(const Vector2D &lt, const Vector2D &rt)
+{
+	return (lt.x == rt.x) && (lt.x == rt.y);
+}
+
 Vector2D &Vector2D::normalize()
 {
     double a = sqrt(x*x + y*y);
