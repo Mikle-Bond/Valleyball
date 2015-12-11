@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     player.cpp \
     sam.cpp \
     movable.cpp \
-    manager.cpp
+    manager.cpp \
+    dan.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -23,6 +24,7 @@ HEADERS += \
     sam.h \
     movable.h \
     manager.h \
-    equation.h
+    equation.h \
+    dan.h
 
 
