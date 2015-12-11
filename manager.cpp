@@ -99,6 +99,19 @@ const Block & Manager::getBlock(const std::string & name) const
 	return *(block_tab.at(name).obj);
 }
 
+Ball & Manager::addBall(const std::string & name)
+{
+	if (ball_tab.count(name) > 0)
+		throw; // Ball is already exist.
+	Ball * bll = new Ball()
+	ball_tab.insert(std::make_pair(name, ))
+}
+
+const Ball & Manager::getBall(const std::string & name) const
+{
+
+}
+
 Manager::Status Manager::nextFrame()
 {
 	if (state_.currentStatus == Status::GAME_OVER)

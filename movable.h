@@ -16,7 +16,7 @@ public:
 	Vector2D get_pos(void) const;
 
 	// Moving block on speed*dt
-	virtual void move(double dt); 	
+	virtual bool move(double dt); 	
 
 	// Can be canged outside. In geberal.
 	Vector2D speed;

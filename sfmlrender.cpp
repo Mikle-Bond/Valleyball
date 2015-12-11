@@ -40,7 +40,13 @@ void SfmlRender::init()
 	mgr->addNet("net")   = Block( 0.0, 0.0,  0.0, netHeight);
 
 	// Lastly, the Ball is added
-	bll = &(mgr->addBall("ball") = Ball()); // TODO: Ball initialization
+	bll = 
+		&(mgr->addBall("ball") = Ball(
+				Vector2D(-1.0, 0.0), 
+				Vector2D(1.0, 1.0), 
+				Vector2D(-0.5, 0.7), 
+				Vector2D())
+		); // TODO: Ball initialization
 
 	// Symblinking players
 	lplr = &(mgr->getPlayer("left"));
@@ -71,7 +77,7 @@ void SfmlRender::init()
 
 	// Load the text font
 	sf::Font font;
-	if (!font.loadFromFile("resources/sansation.ttf"))
+	if (!font.loadFromFile("resources/sansation.ttf")) // TODO: chose the correct font.
 		exit(EXIT_FAILURE);
 	pauseMessage.setFont(font);
 	pauseMessage.setCharacterSize(40);
@@ -79,6 +85,7 @@ void SfmlRender::init()
 	pauseMessage.setColor(sf::Color::White);
 	pauseMessage.setString("PAUSED");
 
+	// prepare the background.
 	sf::RectangleShape net(sf::Vector2f(2, float(multiplier * netHeight)));
 	net.setOrigin(1, net.getSize().y);
 	net.setPosition(multiplier, 0);
@@ -139,7 +146,7 @@ void SfmlRender::update()
 	mgr->nextFrame();
 	leftPlayer.setSize(convert(lplr->get_pos()));
 	rightPlayer.setSize(convert(rplr->get_pos()));
-	ballRenderable.setPosition(bll->get_x(), bll->get_y());
+	ballRenderable.setPosition(convert(bll->get_pos()));
 }
 
 void SfmlRender::afterUpdate()
@@ -164,6 +171,9 @@ void SfmlRender::stop()
 }
 
 void Block::draw() const {}
+// Ok. I'm starting to think, that we don't need this intrface.
+// But for now, I will not throw it out. May be it will be useful 
+// with something like OpenGL.
 
 #ifdef DEBUG
 int main()
