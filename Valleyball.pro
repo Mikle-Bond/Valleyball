@@ -6,11 +6,13 @@ CONFIG += C++11
 DEFINES += "DEBUG"
 
 SOURCES += \
+    rendmachine.cpp \
     textrender.cpp \
     vector2d.cpp \
     block.cpp \
     player.cpp \
     sam.cpp \
+    factory.cpp \
     movable.cpp \
     manager.cpp \
     equation.cpp \
@@ -19,15 +21,18 @@ SOURCES += \
 include(deployment.pri)
 qtcAddDeployment()
 
-# LIBS += -lsfml
+LIBS += -lm
 
 HEADERS += \
     ball.h \
     textrender.h \
+    rendmachine.h \
+#    renderinterface.h \
     vector2d.h \
     block.h \
     player.h \ 
     sam.h \
+    factory.h \
     movable.h \
     manager.h \
     equation.h \

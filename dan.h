@@ -18,7 +18,7 @@ class DanThePlayer : public Player // it is rather similar with sam
 public:
     DanThePlayer();
     DanThePlayer(const Vector2D &left, const Vector2D &right, bool Side);
-    ~DanThePlayer();
+    virtual ~DanThePlayer();
     void init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr);
@@ -26,7 +26,7 @@ public:
     Vector2D get_force();
     virtual bool move(double dt);
     virtual void idle(void);
-    virtual Vector2D push(void);
+    // virtual Vector2D push(void);
 };
 
 

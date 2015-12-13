@@ -2,7 +2,9 @@
 #include "manager.h"
 #include "equation.h"
 #include <math.h>
+
 PEGISTRATE_PLAYER(DanThePlayer);
+
 // it is not very wrong, but don't complete
 double DanThePlayer::were()
 {
@@ -59,12 +61,20 @@ Vector2D DanThePlayer::How()
     return Vector2D(0., 0.);
 }
 
-DanThePlayer::DanThePlayer(const Vector2D &left = Vector2D(-1., 0.), const Vector2D &right = Vector2D(0., 1.), bool Side = true)
+DanThePlayer::DanThePlayer(const Vector2D &left, const Vector2D &right, bool Side = true)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
 
 }
+
+DanThePlayer::DanThePlayer()
+:
+    DanThePlayer(Vector2D(-1., 0.), Vector2D(0., 1.), true)
+{
+
+}
+
 void DanThePlayer::init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr)
@@ -87,8 +97,6 @@ void DanThePlayer::idle()
         speed = Vector2D(getMaxSpeed(), 0);
 }
 
-
-
 Vector2D DanThePlayer::get_force()
 {
     return How() * (1.0 / Manager::getSingleton().getStep());
@@ -96,7 +104,9 @@ Vector2D DanThePlayer::get_force()
     // bPos -- position vector
     // bSpd -- speed vector
     // bAcc -- acceleration vector
-
 }
 
+DanThePlayer::~DanThePlayer()
+{
 
+}

@@ -2,6 +2,7 @@
 #include "manager.h"
 #include "equation.h"
 #include <math.h>
+
 PEGISTRATE_PLAYER(SamThePlayer);
 
 
@@ -61,13 +62,21 @@ Vector2D SamThePlayer::How()
     return Vector2D(0., 0.);
 }
 
-SamThePlayer::SamThePlayer(const Vector2D &left = Vector2D(0.0, 0.0),\
-                           const Vector2D &right = Vector2D(1., 1.), bool Side = false)
+SamThePlayer::SamThePlayer(const Vector2D &left, \
+                           const Vector2D &right, bool Side = false)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
 
 }
+
+SamThePlayer::SamThePlayer()
+:
+    SamThePlayer(Vector2D(), Vector2D(1., 1.), false)
+{
+
+}
+
 void SamThePlayer::init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr)
@@ -95,10 +104,13 @@ void SamThePlayer::idle()
 Vector2D SamThePlayer::get_force()
 {
     return How() * (1.0 / Manager::getSingleton().getStep());
-	// Here:
+    // Here:
 	// bPos -- position vector
 	// bSpd -- speed vector 
-	// bAcc -- acceleration vector
-	
+	// bAcc -- acceleration vector	
 }
 
+SamThePlayer::~SamThePlayer()
+{
+
+}

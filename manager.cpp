@@ -1,4 +1,7 @@
 ﻿#include "manager.h"
+#include <stdexcept>
+
+using std::logic_error;
 
 Manager * Manager::single = nullptr;
 Manager::State Manager::state_;
@@ -47,13 +50,12 @@ bool Manager::resetSingleton()
 
 Player & Manager::addPlayer(const std::string & name, const std::string & type)
 {
-	auto it = factories.find(type);
-	if (it == factories.end()) {
-		throw; // Player realization is not registered.
+    auto it = factories.find(type);
+    if (it == factories.end()) {
+        throw logic_error("Player realization is not registered: " + type);
 	}
-	auto y = player_tab.count(name);
-	if (y > 0) {
-		throw; // Player already exist.
+    if (player_tab.count(name) > 0) {
+        throw logic_error("Player already exist.");
 	}
 	Player * plr = it->second->create();
 	player_tab.insert(std::make_pair(name, plr));
@@ -69,7 +71,7 @@ Block & Manager::addNet(const std::string & name)
 {
 
 	if (block_tab.count(name) > 0)
-		throw; // Block already exist.
+        throw logic_error("Block already exist.");
 	Block *x = new Block();
 	net_tab.insert(std::make_pair(name, x));
 	return *x;
@@ -86,7 +88,7 @@ Block & Manager::addBlock(const std::string & name, const std::string & obeyer)
 	Player * res = player_tab.at(obeyer); // TODO: make custom exception
 	Block * blk = new Block();
 	if (block_tab.count(name) > 0)
-		throw; // Block is already exist.
+        throw logic_error("Block is already exist.");
 	block_t y;
 	y.obj = blk;
 	y.plr = res;
@@ -102,7 +104,7 @@ const Block & Manager::getBlock(const std::string & name) const
 Ball & Manager::addBall(const std::string & name)
 {
 	if (ball_tab.count(name) > 0)
-		throw; // Ball is already exist.
+        throw logic_error("Ball is already exist.");
 	Ball * bll = new Ball();
 	ball_t y;
 	y.plr = nullptr;
@@ -171,14 +173,14 @@ Manager::Status Manager::nextFrame()
 		Player * plr = plr_iter->second;
 		plr->idle();
 		plr->move(dt_);
-		plr->draw();
+//		plr->draw();
 	}
-	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
-		net_iter->second->draw();
-	}
-	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
-		(block_iter->second).obj->draw();
-	}
+//	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
+//		net_iter->second->draw();
+//	}
+//	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
+//		(block_iter->second).obj->draw();
+//	}
 
 	return state_.currentStatus;
 }
