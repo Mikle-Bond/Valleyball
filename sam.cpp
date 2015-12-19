@@ -7,9 +7,10 @@ PEGISTRATE_PLAYER(SamThePlayer);
 
 
 // it is not very wrong, but don't complete
-double SamThePlayer::were(const Ball & ball)
-{
 
+double SamThePlayer::were()
+{
+        const Ball &ball = Manager::getSingleton().getBall("ball");
 
         double t = 0;
         if(ball.get_speed().y > 0)
@@ -35,7 +36,9 @@ double SamThePlayer::were(const Ball & ball)
 // i need have strong think about it
 Vector2D SamThePlayer::How()
 {
-	Manager & mgr = Manager::getSingleton();
+
+    Manager &mng = Manager::getSingleton();
+
     double x1 = 0, ym = 0;
     double vy;
     double vx;
@@ -45,25 +48,26 @@ Vector2D SamThePlayer::How()
         if(side)
         {
             x1 = (1 + x1) / 2;
-            ym = mgr.getNet("twall").b.y - (i + 1) * mgr.getBall("ball").get_Radius();
+            ym = mng.getNet("twall").b.y - (i + 1) * mng.getBall("ball").get_Radius();
         }
         else
         {
             x1 = (-1 + x1) / 2;
-            ym = mgr.getNet("net").b.y + (i + 1) * mgr.getBall("ball").get_Radius();
+            ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_Radius();
         }
-        vy = sqrt(mgr.getBall("ball").get_accel().y * 2 * ym);
-        vx = x1 * sqrt(mgr.getBall("ball").get_accel().y / (ym * 2)) / 2;
+        vy = sqrt(mng.getBall("ball").get_accel().y * 2 * ym);
+        vx = x1 * sqrt(mng.getBall("ball").get_accel().y / (ym * 2)) / 2;
 
-        if((vx*vx + vy*vy) < getMaxForce() * mgr.getStep() / mgr.getBall("ball").get_Mass())
+        if((vx*vx + vy*vy) < getMaxForce() * mng.getStep() / mng.getBall("ball").get_Mass())
             return Vector2D(vx, vy);
     }
 
     return Vector2D(0., 0.);
 }
 
-SamThePlayer::SamThePlayer(const Vector2D &left, \
-                           const Vector2D &right, bool Side = false)
+
+SamThePlayer::SamThePlayer(const Vector2D &left = Vector2D(0.0, 0.0),\
+                           const Vector2D &right = Vector2D(1., 1.), bool Side = false)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
@@ -81,7 +85,7 @@ void SamThePlayer::init(const Vector2D &left, const Vector2D &right,
             double height, double max_speed, double max_force,
             double curr)
 {
-    initDefault(left, right, height, max_speed, max_force,curr);
+    initDefault(left, right, height, max_speed, max_force, curr);
 }
 
 bool SamThePlayer::move(double dt)
@@ -89,14 +93,23 @@ bool SamThePlayer::move(double dt)
     return Player::move(dt);
 }
 
+
+namespace MyUseful
+{
+inline double absd(double x)
+{
+    if (x < 0) return -x;
+    return x;
+}
+}//namespace MyUseful
 void SamThePlayer::idle()
 {
-    double x = were(Manager::getSingleton().getBall("ball"));
+    double x = were() - get_pos().x;
     double vx = x / Manager::getSingleton().getStep();
-    if(vx < getMaxSpeed())
-        speed = Vector2D(x / Manager::getSingleton().getStep(), 0);
+    if(MyUseful::absd(vx) < getMaxSpeed())
+        speed = (vx / MyUseful::absd(vx)) * Vector2D(x / Manager::getSingleton().getStep(), 0);
     else
-        speed = Vector2D(getMaxSpeed(), 0);
+        speed = (vx / MyUseful::absd(vx)) * Vector2D(getMaxSpeed(), 0);
 }
 
 

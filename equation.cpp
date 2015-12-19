@@ -1,6 +1,8 @@
 #include "equation.h"
+#include <math.h>
+#define WRONG -1
 
-
+//just positive root
 double PositiveRoot(double a, double b, double c)
 {
     if (a == 0.)

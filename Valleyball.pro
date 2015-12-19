@@ -19,6 +19,7 @@ SOURCES += \
     equation.cpp \
     dan.cpp
 
+
 include(deployment.pri)
 qtcAddDeployment()
 
