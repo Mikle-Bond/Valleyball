@@ -1,4 +1,5 @@
 TEMPLATE = app
+CONFIG += debug
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt

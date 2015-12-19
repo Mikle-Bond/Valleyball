@@ -33,8 +33,8 @@ void TextRender::init()
 {
 	mgr = &(Manager::getSingleton());
 	mgr->setStep(1.0 / 60.0);
-    mgr->addPlayer("left", "SamThePlayer").init(Vector2D(-1.0), Vector2D(), 0.2, 0.05, 0.5, 0.5);
-    mgr->addPlayer("right", "DanThePlayer").init(Vector2D(), Vector2D(1.0), 0.2, 0.05, 0.5, 0.5);
+	mgr->addPlayer("left", "SamThePlayer").init(Vector2D(-1.0), Vector2D(), 0.2, 0.05, 0.5, 0.5);
+	mgr->addPlayer("right", "DanThePlayer").init(Vector2D(), Vector2D(1.0), 0.2, 0.05, 0.5, 0.5);
 	mgr->addBlock("leftPlate", "left") = Block(Vector2D(-1.0), Vector2D());
 	mgr->addBlock("rightPlate", "right") = Block(Vector2D(), Vector2D(1.0));
 	mgr->addNet("lwall") = Block(-1.0, 0.0, -1.0, 1.0);
@@ -82,11 +82,11 @@ void TextRender::stop()
 {
     Manager::State const & st = Manager::getState();
 	std::cout << "Game Over. The " 
-		<< *(st.playerName) 
+		<< (st.playerName ? *(st.playerName) : "[not defined]") 
 		<< " wasn't able to prevent " 
-		<< *(st.ballName)
+		<< (st.ballName ? *(st.ballName) : "[not defined]")
 		<< " to touch the "
-		<< *(st.blockName)
+		<< (st.blockName ? *(st.blockName) : "[not defined]")
 		<< "." << std::endl;
 }
 /*

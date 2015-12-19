@@ -45,10 +45,10 @@ public:
 	// to the others to manage them outside,
 	// not through the manager.
 	
-	enum Status { 
+	enum class Status { 
 		OK, 			// stands for no special state
 		ATTACK, 		// one or more players touched the ball
-		GAME_OVER = 0x0, 	// ball contacted with surface
+		GAME_OVER, 		// ball contacted with surface
 		NOT_STARTED, 		// manager is ready to begin
 	       	DESTROYED		// manager is seted down
 	};
@@ -86,6 +86,11 @@ private:
 
 	// Used fo correct end of game.
 	const std::string * getLoserName(const Player * plr) const;
+	void setState(
+		const Status sts,
+		const std::string * plr_name, 
+		const std::string * bll_name, 
+		const std::string * blk_name);
 
 	static Manager * single;
 

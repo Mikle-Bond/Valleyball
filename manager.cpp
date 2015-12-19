@@ -131,10 +131,11 @@ Manager::Status Manager::nextFrame()
 	  	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
 			Block * net = net_iter->second;
 			if (bll->IsCrossing(*net)) {
-				state_.currentStatus = Status::GAME_OVER;
-				state_.playerName = getLoserName((ball_iter->second).plr);
-				state_.ballName = &(ball_iter->first);
-				state_.blockName = &(net_iter->first);
+				setState(
+					Status::GAME_OVER,
+					getLoserName((ball_iter->second).plr),
+					&(ball_iter->first),
+					&(net_iter->first));
 				return Status::GAME_OVER;
 			}
 		}
@@ -142,10 +143,11 @@ Manager::Status Manager::nextFrame()
 	  	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
 			Block * blk = (block_iter->second).obj;
 			if (bll->IsCrossing(*blk)) {
-				state_.currentStatus = Status::GAME_OVER;
-				state_.playerName = getLoserName((block_iter->second).plr);
-				state_.ballName = &(ball_iter->first);
-				state_.blockName = &(block_iter->first);
+				setState(
+					Status::GAME_OVER,
+					getLoserName((block_iter->second).plr),
+					&(ball_iter->first),
+					&(block_iter->first));
 				return Status::GAME_OVER;
 			}
 		}
@@ -156,10 +158,11 @@ Manager::Status Manager::nextFrame()
 				bll->push(plr->get_force(), dt_);
 				// In the perfect world there should be the pointer to the ball, 
 				// as a paraneter to .get_force(), but I'll do this later.
-				state_.currentStatus = Status::ATTACK;
-				state_.ballName = &(ball_iter->first);
-				state_.playerName = &(plr_iter->first);
-				state_.blockName = nullptr;
+				setState(
+					Status::ATTACK,
+					&(ball_iter->first),
+					&(plr_iter->first),
+					nullptr);
 				ball_iter->second.plr = plr;
 				// notice that here is no return.
 			}
@@ -194,6 +197,18 @@ void Manager::setStep(double new_dt)
 double Manager::getStep() const
 {
 	return dt_;
+}
+
+void Manager::setState(
+	const Manager::Status sts,
+	const std::string * plr_name, 
+	const std::string * bll_name, 
+	const std::string * blk_name)
+{
+	state_.currentStatus = sts;
+	state_.playerName = plr_name;
+	state_.ballName = bll_name;
+	state_.blockName = blk_name;
 }
 
 const Manager::State & Manager::getState()
