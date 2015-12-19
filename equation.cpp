@@ -9,9 +9,9 @@ double MyUseful::absd(double x)
 }
 int MyUseful::sign(double x)
 {
-    if (x == 0) return 0;
     if (x > 0)  return 1;
     if (x < 0)  return -1;
+    return 0;
 }
 
 //just positive root

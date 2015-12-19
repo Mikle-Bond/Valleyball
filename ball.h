@@ -66,13 +66,18 @@ public:
 */
     int IsCrossing (const Block &block) const //i hope that block is orientated
     {
-        if (block.a.x == block.b.x)
+        if (block.a.y == block.b.y)
+
+            if((get_pos().y + _Radius >= block.a.y) &&  (get_pos().y - _Radius <= block.a.y))
+                return HORIZONTAL_CROSS;
+
+        if ((block.a.x == block.b.x) &&\
+                (block.a.y > block.b.y)?\
+                (get_pos().y - _Radius <= block.a.y):\
+                (get_pos().y - _Radius <= block.b.y))
             if((get_pos().x + _Radius >= block.a.x) && (get_pos().x - _Radius <= block.a.x))
                 return VERTICAL_CROSS;
 
-        if (block.a.y == block.b.y)
-            if((get_pos().y + _Radius >= block.a.y) &&  (get_pos().y - _Radius <= block.a.y))
-                return HORIZONTAL_CROSS;
         return NONE_CROSS;
     }
 
