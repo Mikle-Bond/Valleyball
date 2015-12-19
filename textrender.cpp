@@ -33,8 +33,8 @@ void TextRender::init()
 {
 	mgr = &(Manager::getSingleton());
 	mgr->setStep(1.0 / 60.0);
-	mgr->addPlayer("left", "SamThePlayer").init(Vector2D(-1.0), Vector2D(), 0.2, 0.05, 0.5, 0.5);
-	mgr->addPlayer("right", "DanThePlayer").init(Vector2D(), Vector2D(1.0), 0.2, 0.05, 0.5, 0.5);
+	mgr->addPlayer("left", "DanThePlayer").init(Vector2D(-1.0), Vector2D(), 0.2, 0.05, 0.5, 0.5);
+	mgr->addPlayer("right", "SamThePlayer").init(Vector2D(), Vector2D(1.0), 0.2, 0.05, 0.5, 0.5);
 	mgr->addBlock("leftPlate", "left") = Block(Vector2D(-1.0), Vector2D());
 	mgr->addBlock("rightPlate", "right") = Block(Vector2D(), Vector2D(1.0));
 	mgr->addNet("lwall") = Block(-1.0, 0.0, -1.0, 1.0);
@@ -45,7 +45,7 @@ void TextRender::init()
 		&(mgr->addBall("ball") = Ball(
 				Vector2D(-1.0, 0.0), 
 				Vector2D(1.0, 1.0), 
-                Vector2D(-0.5, 0.5),
+				Vector2D(-0.5, 0.5),
 				Vector2D())
 		); // TODO: Ball initialization
 	// bll = &(mgr->addBall("ball") = Ball()); // TODO: Ball initialization
@@ -68,14 +68,26 @@ void TextRender::update()
 	mgr->nextFrame();
 	std::cout 
 		<< "left: " << lplr->get_pos().x
-		<< " right: " << rplr->Movable::get_pos().x
-		<< " ball: ( " << bll->get_pos().x << ", " << bll->get_pos().y << " )"
+		<< "\tright: " << rplr->Movable::get_pos().x
+		<< "\tball: ( " << bll->get_pos().x << ", " << bll->get_pos().y << " )"
 		<< std::endl;
 }
 
 void TextRender::afterUpdate()
 {
-
+	typedef Manager::Status St;
+	Manager::State const & st = Manager::getState();
+	switch(st.currentStatus) {
+	case St::OK:
+		std::cout << "Stats is [ OK ]" << std::endl;
+		break;
+	case St::ATTACK:
+		std::cout << *(st.playerName) << " player pushed ball" << std::endl;
+		break;
+	default:
+		// Do nithing
+		break;
+	}
 }
 
 void TextRender::stop()

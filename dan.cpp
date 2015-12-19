@@ -54,10 +54,10 @@ Vector2D DanThePlayer::How()
             x1 = (-0.05 + x1) / 2;
             ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_Radius();
         }
-        vy = sqrt(mng.getBall("ball").accel().y * 2 * ym);
-        vx = x1 * sqrt(mng.getBall("ball").accel().y / (ym * 2)) / 2;
+        vy = sqrt(mng.getBall("ball").get_accel().y * 2 * ym);
+        vx = x1 * sqrt(mng.getBall("ball").get_accel().y / (ym * 2)) / 2;
 
-        if((vx*vx + vy*vy) < get_max_force() * mng.getStep() / mng.getBall("ball").get_Mass())
+        if((vx*vx + vy*vy) < getMaxForce() * mng.getStep() / mng.getBall("ball").get_Mass())
             return Vector2D(vx, vy);
     }
 
@@ -65,7 +65,7 @@ Vector2D DanThePlayer::How()
 }
 
 
-DanThePlayer::DanThePlayer(const Vector2D &left = Vector2D(-1., 0.), const Vector2D &right = Vector2D(0., 1.), bool Side = true)
+DanThePlayer::DanThePlayer(const Vector2D &left, const Vector2D &right, bool Side = true)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
@@ -94,12 +94,12 @@ bool DanThePlayer::move(double dt)
 void DanThePlayer::idle()
 {
 
-    double x = were() - get_pos();
+    double x = were() - get_pos().x;
     double vx = x / Manager::getSingleton().getStep();
-    if(MyUseful::absd(vx) < max_speed_)
-        speed =(vx / MyUseful::absd(vx)) *  Vector2D(x / Manager::getStep(), 0);
+    if(MyUseful::absd(vx) < getMaxSpeed())
+        speed =(vx / MyUseful::absd(vx)) *  Vector2D(x / Manager::getSingleton().getStep(), 0);
     else
-        speed = (vx / MyUseful::absd(vx)) * Vector2D(max_speed_, 0);
+        speed = (vx / MyUseful::absd(vx)) * Vector2D(getMaxSpeed(), 0);
 }
 
 Vector2D DanThePlayer::get_force()

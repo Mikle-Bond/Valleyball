@@ -160,8 +160,8 @@ Manager::Status Manager::nextFrame()
 				// as a paraneter to .get_force(), but I'll do this later.
 				setState(
 					Status::ATTACK,
-					&(ball_iter->first),
 					&(plr_iter->first),
+					&(ball_iter->first),
 					nullptr);
 				ball_iter->second.plr = plr;
 				// notice that here is no return.

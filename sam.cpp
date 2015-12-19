@@ -66,8 +66,7 @@ Vector2D SamThePlayer::How()
 }
 
 
-SamThePlayer::SamThePlayer(const Vector2D &left = Vector2D(0.0, 0.0),\
-                           const Vector2D &right = Vector2D(1., 1.), bool Side = false)
+SamThePlayer::SamThePlayer(const Vector2D &left, const Vector2D &right, bool Side = false)
 :
     Player(left, right, 0.2, 0.05, 0.5), side(Side)
 {
@@ -93,15 +92,6 @@ bool SamThePlayer::move(double dt)
     return Player::move(dt);
 }
 
-
-namespace MyUseful
-{
-inline double absd(double x)
-{
-    if (x < 0) return -x;
-    return x;
-}
-}//namespace MyUseful
 void SamThePlayer::idle()
 {
     double x = were() - get_pos().x;

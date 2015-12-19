@@ -2,6 +2,12 @@
 #include <math.h>
 #define WRONG -1
 
+double MyUseful::absd(double x)
+{
+    if (x < 0) return -x;
+    return x;
+}
+
 //just positive root
 double PositiveRoot(double a, double b, double c)
 {
