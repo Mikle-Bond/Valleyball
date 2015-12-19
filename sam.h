@@ -10,7 +10,7 @@ class SamThePlayer : public Player
     //false - right side, true - left side;
     bool side;
 
-    double were(Ball& ball);
+    double were();
     Vector2D How();
 
 public:

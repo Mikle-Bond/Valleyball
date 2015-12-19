@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     sam.cpp \
     movable.cpp \
     manager.cpp \
-    dan.cpp
+    dan.cpp \
+    equation.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
