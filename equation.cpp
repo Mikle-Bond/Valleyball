@@ -1,4 +1,4 @@
-#include "equation.h"
+﻿#include "equation.h"
 #include <math.h>
 #define WRONG -1
 
@@ -6,6 +6,12 @@ double MyUseful::absd(double x)
 {
     if (x < 0) return -x;
     return x;
+}
+int MyUseful::sign(double x)
+{
+    if (x == 0) return 0;
+    if (x > 0)  return 1;
+    if (x < 0)  return -1;
 }
 
 //just positive root

@@ -97,9 +97,9 @@ void SamThePlayer::idle()
     double x = were() - get_pos().x;
     double vx = x / Manager::getSingleton().getStep();
     if(MyUseful::absd(vx) < getMaxSpeed())
-        speed = (vx / MyUseful::absd(vx)) * Vector2D(x / Manager::getSingleton().getStep(), 0);
+        speed = Vector2D(vx, 0);
     else
-        speed = (vx / MyUseful::absd(vx)) * Vector2D(getMaxSpeed(), 0);
+        speed = Vector2D(getMaxSpeed(), 0);
 }
 
 

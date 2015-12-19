@@ -5,6 +5,7 @@ namespace MyUseful
 {
 
 double absd(double x);
+int sign(double x);
 
 }//namespace MyUseful
 
