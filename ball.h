@@ -3,8 +3,11 @@
 #include "vector2d.h"
 #include "block.h"
 #include "movable.h"
+#include "equation.h"
+#include "manager.h"
 
 #define NONE_CROSS       0
+#define CROSS           -1
 #define VERTICAL_CROSS   1
 #define HORIZONTAL_CROSS 2
 #define SLOPPING_CROSS   3
@@ -45,40 +48,47 @@ public:
         return _mass;
     }
 //-------------------------------------------------------------------------------------------------
-    void push(Vector2D f, double dt)
+    void push(Vector2D f)
     {
-        speed.x += (f.x / _mass + acceleration.x) * dt;
-        speed.y += (f.y / _mass + acceleration.y) * dt;
+        speed.x += (f.x + acceleration.x) * Manager::getSingleton().getStep();
+        speed.y += (f.y + acceleration.y) * Manager::getSingleton().getStep();
     }
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------
-    bool move(double dt) override
+    bool move() override
     {
-        speed.x += (acceleration.x) * dt;
-        speed.y += (acceleration.y) * dt;
+        speed.x += (acceleration.x) * Manager::getSingleton().getStep();
+        speed.y += (acceleration.y) * Manager::getSingleton().getStep();
 
         return Movable::move(dt);// may be it isn't need becose of we haven't crossing with walls
     }
-/*
- * now only vertical and horizontal blocks, may be sloping in the future
- * i need to think about it
-*/
+//=================================================================================================
     int IsCrossing (const Block &block) const //i hope that block is orientated
     {
-        if (block.a.y == block.b.y)
+        double x0 = get_pos().x;
+        double y0 = get_pos().y;
 
-            if((get_pos().y + _Radius >= block.a.y) &&  (get_pos().y - _Radius <= block.a.y))
-                return HORIZONTAL_CROSS;
+        if (block.b.x - block.a.x == 0)
+        {
+            double b = -block.a.x;
+            if(((block.a.y - block.b.y > 0) && (y0 > block.b.y && y0 < block.a.y))\
+                || ((block.a.y - block.b.y < 0) && (y0 < block.b.y && y0 > block.a.y)))
+                    if(MyUseful::IsRoots(1, -2 * y0, -_Radius*_Radius + (b - x0)*(b - x0)))
+                        return CROSS;
+        }
+        else
+        {
+           double k = (block.b.y - block.a.y) / (block.b.x - block.a.x);
+           double b = block.b.y - k * block.b.x;
 
-        if ((block.a.x == block.b.x) &&\
-                (block.a.y > block.b.y)?\
-                (get_pos().y - _Radius <= block.a.y):\
-                (get_pos().y - _Radius <= block.b.y))
-            if((get_pos().x + _Radius >= block.a.x) && (get_pos().x - _Radius <= block.a.x))
-                return VERTICAL_CROSS;
-
+           if(((block.a.x - block.b.x > 0) && (x0 > block.b.x && x0 < block.a.x))\
+               || ((block.a.x - block.b.x < 0) && (x0 < block.b.x && x0 > block.a.x)))
+                if (MyUseful::IsRoots(k*k + 1, -2 * (x0 - y0 * k), - _Radius*_Radius - 2 * y0 * b + x0*x0))
+                   return CROSS;
+        }
         return NONE_CROSS;
+
     }
 
 };

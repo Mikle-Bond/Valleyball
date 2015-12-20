@@ -18,11 +18,11 @@ double DanThePlayer::were()
 
             double ym = ball.get_pos().y + ball.get_speed().y * t - ball.get_accel().y * t*t / 2;
 
-            t += PositiveRoot(1, 0, - 2 * ym / ball.get_accel().y);//????!!!!
+            t += MyUseful::PositiveRoot(1, 0, - 2 * ym / ball.get_accel().y);//????!!!!
         }
         else //vy <= 0
         {
-            t = PositiveRoot(1, 2 * ball.get_speed().y / ball.get_accel().y, - 2 * ball.get_pos().y / ball.get_accel().y);
+            t = MyUseful::PositiveRoot(1, 2 * ball.get_speed().y / ball.get_accel().y, - 2 * ball.get_pos().y / ball.get_accel().y);
         }
         return ball.get_pos().x + ball.get_speed().x * t + 0.01;
 
