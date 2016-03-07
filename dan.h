@@ -24,7 +24,7 @@ public:
             double curr);
 
     Vector2D get_force();
-    virtual bool move(double dt);
+    virtual bool move();
     virtual void idle(void);
     // virtual Vector2D push(void);
 };

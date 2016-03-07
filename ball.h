@@ -11,7 +11,14 @@
 #define VERTICAL_CROSS   1
 #define HORIZONTAL_CROSS 2
 #define SLOPPING_CROSS   3
-
+/*
+ *Ball is a class. Ball can move. Whatever you want you know
+ *it's radius(get_radius()), accelaration(get_accel()), speed(get_cpeed),
+ * mass(get_Mass()) and, as a Movable(get_pos()), position. You can push
+ * Ball by force - Ball::push(Vector2D(-1, 0)).
+ * function Ball::IsCrossing(Block) isn't good enough but now it shows
+ * Vertical and Horizontal crossing
+*/
 class Ball : public Movable
 {
     Vector2D acceleration;//by external force, if i need it here???
@@ -38,7 +45,7 @@ public:
         return acceleration;
     }
 //-------------------------------------------------------------------------------------------------
-    inline double getradius_() const
+    inline double get_radius() const
     {
         return radius_;
     }
@@ -48,49 +55,13 @@ public:
         return _mass;
     }
 //-------------------------------------------------------------------------------------------------
-    void push(Vector2D f)
-    {
-        speed.x += (f.x + acceleration.x) * Manager::getSingleton().getStep();
-        speed.y += (f.y + acceleration.y) * Manager::getSingleton().getStep();
-    }
+    void push(Vector2D f);
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------
-    bool move() override
-    {
-        speed.x += (acceleration.x) * Manager::getSingleton().getStep();
-        speed.y += (acceleration.y) * Manager::getSingleton().getStep();
-
-        return Movable::move();// may be it isn't need becose of we haven't crossing with walls
-    }
+    bool move() override;
 //=================================================================================================
-    int IsCrossing (const Block &block) const //i hope that block is orientated
-    {
-        double x0 = get_pos().x;
-        double y0 = get_pos().y;
-
-        if (block.b.x - block.a.x == 0)
-        {
-            double b = -block.a.x;
-            if(((block.a.y - block.b.y > 0) && (y0 > block.b.y && y0 < block.a.y))\
-                || ((block.a.y - block.b.y < 0) && (y0 < block.b.y && y0 > block.a.y)))
-                    if(MyUseful::IsRoots(1, -2 * y0, -radius_*radius_ + (b - x0)*(b - x0)))
-                        return CROSS;
-        }
-        else
-        {
-           double k = (block.b.y - block.a.y) / (block.b.x - block.a.x);
-           double b = block.b.y - k * block.b.x;
-
-           if(((block.a.x - block.b.x > 0) && (x0 > block.b.x && x0 < block.a.x))\
-               || ((block.a.x - block.b.x < 0) && (x0 < block.b.x && x0 > block.a.x)))
-                if (MyUseful::IsRoots(k*k + 1, -2 * (x0 - y0 * k), - radius_*radius_ - 2 * y0 * b + x0*x0))
-                   return CROSS;
-        }
-        return NONE_CROSS;
-
-    }
-
+    int IsCrossing (const Block &block) const;//i hope that block is orientated
 };
 //===================================================================================================
 /*

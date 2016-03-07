@@ -48,12 +48,12 @@ Vector2D SamThePlayer::How()
         if(side)
         {
             x1 = (1 + x1) / 2;
-            ym = mng.getNet("twall").b.y - (i + 1) * mng.getBall("ball").get_Radius();
+            ym = mng.getNet("twall").b.y - (i + 1) * mng.getBall("ball").get_radius();
         }
         else
         {
             x1 = (-1 + x1) / 2;
-            ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_Radius();
+            ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_radius();
         }
         vy = sqrt(mng.getBall("ball").get_accel().y * 2 * ym);
         vx = x1 * sqrt(mng.getBall("ball").get_accel().y / (ym * 2)) / 2;
@@ -87,9 +87,9 @@ void SamThePlayer::init(const Vector2D &left, const Vector2D &right,
     initDefault(left, right, height, max_speed, max_force, curr);
 }
 
-bool SamThePlayer::move(double dt)
+bool SamThePlayer::move()
 {
-    return Player::move(dt);
+    return Player::move();
 }
 
 void SamThePlayer::idle()
