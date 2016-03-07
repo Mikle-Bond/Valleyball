@@ -145,7 +145,6 @@ Manager::Status Manager::nextFrame()
 		return Status::GAME_OVER;
 	state_.currentStatus = Status::OK;
 
-	double dt_ = timer_.getStep();
 	// check for collisions of balls
 	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
 		Ball * bll = ball_iter->second.obj;
@@ -177,7 +176,7 @@ Manager::Status Manager::nextFrame()
 	  	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 			Player * plr = plr_iter->second;
 			if (bll->IsCrossing(*plr)) {
-                bll->push(plr->get_force());
+				bll->push(plr->get_force());
 				// In the perfect world there should be the pointer to the ball, 
 				// as a paraneter to .get_force(), but I'll do this later.
 				setState(
@@ -190,14 +189,14 @@ Manager::Status Manager::nextFrame()
 			}
 		}
 		// ... with fouth dimention
-        bll->move();
+		bll->move();
 		// bll->draw();
 	} 
 
 	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 		Player * plr = plr_iter->second;
 		plr->idle();
-        plr->move();
+		plr->move();
 //		plr->draw();
 	}
 //	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
@@ -211,6 +210,11 @@ Manager::Status Manager::nextFrame()
 }
 
 const ITimer * Manager::getTimer() const
+{
+	return &timer_;
+}
+
+ITimer * Manager::getTimer()
 {
 	return &timer_;
 }

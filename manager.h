@@ -86,6 +86,7 @@ public:
 	Status nextFrame(void);
 
 	const ITimer * getTimer() const;
+	ITimer * getTimer();
 	void setStep(double new_dt);
 	double getStep() const;
 
