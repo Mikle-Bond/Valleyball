@@ -50,6 +50,11 @@ Vector2D &Vector2D::operator *=(double a)
     return *this;
 }
 
+Vector2D &Vector2D::operator /=(double a)
+{
+	return this->operator*=(1.0 / a);
+}
+
 Vector2D operator *(const Vector2D &lt, double a)
 {
     Vector2D temp(lt);
@@ -64,9 +69,21 @@ Vector2D operator *(double a, const Vector2D &rt)
     return temp;
 }
 
+Vector2D operator /(const Vector2D &lt, double a)
+{
+	Vector2D temp = lt;
+	temp /= a;
+	return temp;
+}
+
 bool operator==(const Vector2D &lt, const Vector2D &rt)
 {
 	return (lt.x == rt.x) && (lt.x == rt.y);
+}
+
+bool operator!=(const Vector2D &lt, const Vector2D &rt)
+{
+	return !(lt == rt);
 }
 
 Vector2D &Vector2D::normalize()

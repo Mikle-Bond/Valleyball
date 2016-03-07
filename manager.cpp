@@ -1,4 +1,7 @@
 ﻿#include "manager.h"
+#include <stdexcept>
+
+using std::logic_error;
 
 Manager * Manager::single = nullptr;
 Manager::State Manager::state_;
@@ -22,6 +25,27 @@ public:
 static ManagerDestroyer ManagerDestroyerClass;
 
 } // namespace
+
+
+ITimer::ITimer(double dt)
+{
+	if (dt < 0.0) {
+		throw std::invalid_argument("Timer step can not be negative");	
+	} else {
+		dt_ = dt;
+	}
+}
+
+void ITimer::setStep(double new_dt)
+{
+	if (new_dt >= 0.0)
+		dt_ = new_dt;
+}
+
+double ITimer::getStep() const
+{
+	return dt_;
+}
 
 Manager::Manager()
 {
@@ -47,13 +71,12 @@ bool Manager::resetSingleton()
 
 Player & Manager::addPlayer(const std::string & name, const std::string & type)
 {
-	auto it = factories.find(type);
-	if (it == factories.end()) {
-		throw; // Player realization is not registered.
+    auto it = factories.find(type);
+    if (it == factories.end()) {
+        throw logic_error("Player realization is not registered: " + type);
 	}
-	auto y = player_tab.count(name);
-	if (y > 0) {
-		throw; // Player already exist.
+    if (player_tab.count(name) > 0) {
+        throw logic_error("Player already exist.");
 	}
 	Player * plr = it->second->create();
 	player_tab.insert(std::make_pair(name, plr));
@@ -69,7 +92,7 @@ Block & Manager::addNet(const std::string & name)
 {
 
 	if (block_tab.count(name) > 0)
-		throw; // Block already exist.
+        throw logic_error("Block already exist.");
 	Block *x = new Block();
 	net_tab.insert(std::make_pair(name, x));
 	return *x;
@@ -86,7 +109,7 @@ Block & Manager::addBlock(const std::string & name, const std::string & obeyer)
 	Player * res = player_tab.at(obeyer); // TODO: make custom exception
 	Block * blk = new Block();
 	if (block_tab.count(name) > 0)
-		throw; // Block is already exist.
+        throw logic_error("Block is already exist.");
 	block_t y;
 	y.obj = blk;
 	y.plr = res;
@@ -102,14 +125,18 @@ const Block & Manager::getBlock(const std::string & name) const
 Ball & Manager::addBall(const std::string & name)
 {
 	if (ball_tab.count(name) > 0)
-		throw; // Ball is already exist.
-	Ball * bll = new Ball()
-	ball_tab.insert(std::make_pair(name, ))
+        throw logic_error("Ball is already exist.");
+	Ball * bll = new Ball();
+	ball_t y;
+	y.plr = nullptr;
+	y.obj = bll;
+	ball_tab.insert(std::make_pair(name, y));
+	return *bll;
 }
 
 const Ball & Manager::getBall(const std::string & name) const
 {
-
+	return *(ball_tab.at(name).obj);
 }
 
 Manager::Status Manager::nextFrame()
@@ -118,6 +145,7 @@ Manager::Status Manager::nextFrame()
 		return Status::GAME_OVER;
 	state_.currentStatus = Status::OK;
 
+	double dt_ = timer_.getStep();
 	// check for collisions of balls
 	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
 		Ball * bll = ball_iter->second.obj;
@@ -125,10 +153,11 @@ Manager::Status Manager::nextFrame()
 	  	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
 			Block * net = net_iter->second;
 			if (bll->IsCrossing(*net)) {
-				state_.currentStatus = Status::GAME_OVER;
-				state_.playerName = getLoserName((ball_iter->second).plr);
-				state_.ballName = &(ball_iter->first);
-				state_.blockName = &(net_iter->first);
+				setState(
+					Status::GAME_OVER,
+					getLoserName((ball_iter->second).plr),
+					&(ball_iter->first),
+					&(net_iter->first));
 				return Status::GAME_OVER;
 			}
 		}
@@ -136,10 +165,11 @@ Manager::Status Manager::nextFrame()
 	  	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
 			Block * blk = (block_iter->second).obj;
 			if (bll->IsCrossing(*blk)) {
-				state_.currentStatus = Status::GAME_OVER;
-				state_.playerName = getLoserName((block_iter->second).plr);
-				state_.ballName = &(ball_iter->first);
-				state_.blockName = &(block_iter->first);
+				setState(
+					Status::GAME_OVER,
+					getLoserName((block_iter->second).plr),
+					&(ball_iter->first),
+					&(block_iter->first));
 				return Status::GAME_OVER;
 			}
 		}
@@ -150,44 +180,62 @@ Manager::Status Manager::nextFrame()
 				bll->push(plr->get_force(), dt_);
 				// In the perfect world there should be the pointer to the ball, 
 				// as a paraneter to .get_force(), but I'll do this later.
-				state_.currentStatus = Status::ATTACK;
-				state_.ballName = &(ball_iter->first);
-				state_.playerName = &(plr_iter->first);
-				state_.blockName = nullptr;
+				setState(
+					Status::ATTACK,
+					&(plr_iter->first),
+					&(ball_iter->first),
+					nullptr);
 				ball_iter->second.plr = plr;
 				// notice that here is no return.
 			}
 		}
 		// ... with fouth dimention
 		bll->move(dt_);
-		bll->draw();
+		// bll->draw();
 	} 
 
 	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 		Player * plr = plr_iter->second;
 		plr->idle();
 		plr->move(dt_);
-		plr->draw();
+//		plr->draw();
 	}
-	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
-		net_iter->second->draw();
-	}
-	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
-		(block_iter->second).obj->draw();
-	}
+//	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
+//		net_iter->second->draw();
+//	}
+//	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
+//		(block_iter->second).obj->draw();
+//	}
 
 	return state_.currentStatus;
 }
 
+const ITimer * Manager::getTimer() const
+{
+	return &timer_;
+}
+
+// For the backward capability, this functions are forwarding ITimer interface
 void Manager::setStep(double new_dt)
 {
-	if (new_dt >= 0.0)
-		dt_ = new_dt;
+	timer_.setStep(new_dt);
 }
 
 double Manager::getStep() const
 {
-	return dt_;
+	return timer_.getStep();
+}
+
+void Manager::setState(
+	const Manager::Status sts,
+	const std::string * plr_name, 
+	const std::string * bll_name, 
+	const std::string * blk_name)
+{
+	state_.currentStatus = sts;
+	state_.playerName = plr_name;
+	state_.ballName = bll_name;
+	state_.blockName = blk_name;
 }
 
 const Manager::State & Manager::getState()

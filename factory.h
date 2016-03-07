@@ -40,16 +40,17 @@ protected:
 // opportunity to create class by it's name we need to 
 // parse the name as quoted string during precompilation.
 #define PEGISTRATE_PLAYER(name)					\
-class name##Factory : public PlayerFactory			\
+class name##_Factory : public PlayerFactory			\
 {								\
+public:								\
 	Player * create() {					\
-		return new name();				\
+        return static_cast<Player*>(new name());				\
 	}							\
-	name##Factory() {					\
+    name##_Factory() {					\
 		Factory::registerType(#name, this);		\
 	}							\
 };								\
-static name##Factory name##Registrator
+static name##_Factory name##Registrator
 
 #endif // FACTORY_H
 

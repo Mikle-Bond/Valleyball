@@ -15,10 +15,6 @@ double Player::getMaxSpeed() const
 {
 	return max_speed_;
 }
-double Player::getMaxSpeed()
-{
-    return max_speed_;
-}
 
 Player::Player()
 :

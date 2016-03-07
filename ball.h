@@ -16,13 +16,12 @@ class Ball : public Movable
     double _Radius;
 
 public:
-    Vector2D X0Y0;
 //-------------------------------------------------------------------------------------------------
-    Ball(const Vector2D &left, const Vector2D &right,
-         const Vector2D &st_position, const Vector2D &st_speed,\
-         Vector2D accel = Vector2D(0, 0.0981), double mass = 1, double radius = 0.01)\
+    Ball(const Vector2D &left = Vector2D(-1., 0.), const Vector2D &right = Vector2D(1.0, 1.0),
+         const Vector2D &st_position = Vector2D(0.5, 0.5), const Vector2D &st_speed = Vector2D(),\
+         Vector2D accel = Vector2D(0, -0.0981), double mass = 1, double radius = 0.005)\
         :Movable(left, right, st_position, st_speed), acceleration(accel)\
-        ,_mass(mass),_Radius(radius), X0Y0(st_position)
+        ,_mass(mass),_Radius(radius)
     {
     }
     ~Ball(){}
@@ -31,7 +30,7 @@ public:
     {
         return speed;
     }
-    inline Vector2D get_accel()
+    inline Vector2D get_accel() const
     {
         return acceleration;
     }
@@ -41,7 +40,7 @@ public:
         return _Radius;
     }
 //-------------------------------------------------------------------------------------------------
-    inline double get_Mass()
+    inline double get_Mass() const
     {
         return _mass;
     }
@@ -65,15 +64,20 @@ public:
  * now only vertical and horizontal blocks, may be sloping in the future
  * i need to think about it
 */
-    int IsCrossing (const Block &block)//i hope that block is orientated
+    int IsCrossing (const Block &block) const //i hope that block is orientated
     {
-        if (block.a.x == block.b.x)
-            if(((speed.x > 0) &&  (get_pos().x >= block.a.x))
-            || ((speed.x < 0) &&  (get_pos().x <= block.a.x))) return VERTICAL_CROSS;
-
         if (block.a.y == block.b.y)
-            if(((speed.y > 0) &&  (get_pos().y >= block.a.y))
-            || ((speed.y < 0) &&  (get_pos().y <= block.a.y))) return HORIZONTAL_CROSS;
+
+            if((get_pos().y + _Radius >= block.a.y) &&  (get_pos().y - _Radius <= block.a.y))
+                return HORIZONTAL_CROSS;
+
+        if ((block.a.x == block.b.x) &&\
+                (block.a.y > block.b.y)?\
+                (get_pos().y - _Radius <= block.a.y):\
+                (get_pos().y - _Radius <= block.b.y))
+            if((get_pos().x + _Radius >= block.a.x) && (get_pos().x - _Radius <= block.a.x))
+                return VERTICAL_CROSS;
+
         return NONE_CROSS;
     }
 

@@ -36,7 +36,16 @@
 
 class Ball;
 
-class Manager : private Factory 
+struct ITimer 
+{
+	explicit ITimer(double dt = 0.0);
+	void setStep(double new_dt);
+	double getStep() const;
+private:
+	double dt_;
+};
+
+class Manager : private Factory
 {
 public:
 	static Manager& getSingleton();
@@ -45,10 +54,10 @@ public:
 	// to the others to manage them outside,
 	// not through the manager.
 	
-	enum Status { 
+	enum class Status { 
 		OK, 			// stands for no special state
 		ATTACK, 		// one or more players touched the ball
-		GAME_OVER = 0x0, 	// ball contacted with surface
+		GAME_OVER, 		// ball contacted with surface
 		NOT_STARTED, 		// manager is ready to begin
 	       	DESTROYED		// manager is seted down
 	};
@@ -72,12 +81,13 @@ public:
 	Ball & addBall(const std::string & name);
 	const Ball & getBall(const std::string & name) const;
 
-	// Frame update
+	static const State & getState();
+
 	Status nextFrame(void);
+
+	const ITimer * getTimer() const;
 	void setStep(double new_dt);
 	double getStep() const;
-
-	static const State & getState();
 
 private:
 	Manager();
@@ -86,10 +96,17 @@ private:
 
 	// Used fo correct end of game.
 	const std::string * getLoserName(const Player * plr) const;
+	void setState(
+		const Status sts,
+		const std::string * plr_name, 
+		const std::string * bll_name, 
+		const std::string * blk_name);
 
 	static Manager * single;
 
 	static State state_;
+
+	ITimer timer_;
 
 	// Here ve have a list for each kind of objects.
 	// To ease handling them, we can put them into
@@ -117,8 +134,6 @@ private:
 	std::map<std::string, Block *> net_tab;
 	std::map<std::string, ball_t> ball_tab;
 	std::map<std::string, block_t> block_tab;
-
-	double dt_;
 };
 
 #endif // MANAGER_H 
