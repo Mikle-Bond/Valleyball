@@ -26,6 +26,27 @@ static ManagerDestroyer ManagerDestroyerClass;
 
 } // namespace
 
+
+ITimer::ITimer(double dt)
+{
+	if (dt < 0.0) {
+		throw std::invalid_argument("Timer step can not be negative");	
+	} else {
+		dt_ = dt;
+	}
+}
+
+void ITimer::setStep(double new_dt)
+{
+	if (new_dt >= 0.0)
+		dt_ = new_dt;
+}
+
+double ITimer::getStep() const
+{
+	return dt_;
+}
+
 Manager::Manager()
 {
 	state_.currentStatus = Status::NOT_STARTED;
@@ -124,6 +145,7 @@ Manager::Status Manager::nextFrame()
 		return Status::GAME_OVER;
 	state_.currentStatus = Status::OK;
 
+	double dt_ = timer_.getStep();
 	// check for collisions of balls
 	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
 		Ball * bll = ball_iter->second.obj;
@@ -188,15 +210,20 @@ Manager::Status Manager::nextFrame()
 	return state_.currentStatus;
 }
 
+const ITimer * Manager::getTimer() const
+{
+	return &timer_;
+}
+
+// For the backward capability, this functions are forwarding ITimer interface
 void Manager::setStep(double new_dt)
 {
-	if (new_dt >= 0.0)
-		dt_ = new_dt;
+	timer_.setStep(new_dt);
 }
 
 double Manager::getStep() const
 {
-	return dt_;
+	return timer_.getStep();
 }
 
 void Manager::setState(
