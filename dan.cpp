@@ -18,11 +18,11 @@ double DanThePlayer::were()
 
             double ym = ball.get_pos().y + ball.get_speed().y * t - ball.get_accel().y * t*t / 2;
 
-            t += PositiveRoot(1, 0, - 2 * ym / ball.get_accel().y);//????!!!!
+            t += MyUseful::PositiveRoot(1, 0, - 2 * ym / ball.get_accel().y);//????!!!!
         }
         else //vy <= 0
         {
-            t = PositiveRoot(1, 2 * ball.get_speed().y / ball.get_accel().y, - 2 * ball.get_pos().y / ball.get_accel().y);
+            t = MyUseful::PositiveRoot(1, 2 * ball.get_speed().y / ball.get_accel().y, - 2 * ball.get_pos().y / ball.get_accel().y);
         }
         return ball.get_pos().x + ball.get_speed().x * t + 0.01;
 
@@ -47,12 +47,12 @@ Vector2D DanThePlayer::How()
         {
 
             x1 = (0.05 + x1) / 2;
-            ym = mng.getNet("twall").b.y - (i + 1) * mng.getBall("ball").get_Radius();
+            ym = mng.getNet("twall").b.y - (i + 1) * mng.getBall("ball").get_radius();
         }
         else
         {
             x1 = (-0.05 + x1) / 2;
-            ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_Radius();
+            ym = mng.getNet("net").b.y + (i + 1) * mng.getBall("ball").get_radius();
         }
         vy = sqrt(mng.getBall("ball").get_accel().y * 2 * ym);
         vx = x1 * sqrt(mng.getBall("ball").get_accel().y / (ym * 2)) / 2;
@@ -86,9 +86,9 @@ void DanThePlayer::init(const Vector2D &left, const Vector2D &right,
     initDefault(left, right, height, max_speed, max_force,curr);
 }
 
-bool DanThePlayer::move(double dt)
+bool DanThePlayer::move()
 {
-    return Player::move(dt);
+    return Player::move();
 }
 
 void DanThePlayer::idle()

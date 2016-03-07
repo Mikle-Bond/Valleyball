@@ -24,7 +24,7 @@ public:
 
 
     Vector2D get_force();
-    virtual bool move(double dt) override;
+    virtual bool move() override;
     virtual void idle(void);
     // virtual Vector2D push(void);
 };

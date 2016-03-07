@@ -19,7 +19,7 @@ public:
 	virtual void init(const Vector2D &left, const Vector2D &right, 
 		double height, double max_speed, double max_force, 
 		double curr) = 0;
-	virtual bool move(double dt) override;
+    virtual bool move() override;
     virtual void idle(void) = 0;
     virtual Vector2D get_force() = 0;
 

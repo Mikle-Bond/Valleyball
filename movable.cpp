@@ -1,4 +1,5 @@
 ﻿#include "movable.h"
+#include "manager.h"
 
 
 Movable::Movable(const Vector2D &left, const Vector2D &right, 
@@ -17,10 +18,10 @@ Vector2D Movable::get_pos(void) const
 	return position_;
 }
 
-bool Movable::move(double dt)
+bool Movable::move()
 {
     Vector2D old_pos = position_;
-	Vector2D offset = speed * dt;
+    Vector2D offset = speed * Manager::getSingleton().getStep();
 	position_ += offset;
 	if (position_.x < lb_edge_.x)
 		position_.x = lb_edge_.x;

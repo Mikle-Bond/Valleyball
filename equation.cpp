@@ -1,6 +1,6 @@
 ﻿#include "equation.h"
 #include <math.h>
-#define WRONG -1
+
 
 double MyUseful::absd(double x)
 {
@@ -15,12 +15,12 @@ int MyUseful::sign(double x)
 }
 
 //just positive root
-double PositiveRoot(double a, double b, double c)
+double MyUseful::PositiveRoot(double a, double b, double c)
 {
     if (a == 0.)
     {
-        if(b == 0.) return WRONG;
-        if(b != 0. && c >= 0.) return WRONG;
+        if(b == 0.) return POSITIVE_WRONG_ROOT;
+        if(b != 0. && c >= 0.) return POSITIVE_WRONG_ROOT;
         return -b/c;
     }
     else
@@ -28,7 +28,7 @@ double PositiveRoot(double a, double b, double c)
         if(b == 0.)
         {
             if (c == 0.) return 0.;
-            if (a*c < 0.) return WRONG;
+            if (a*c < 0.) return POSITIVE_WRONG_ROOT;
             else return sqrt(-a/c);
         }
         if(c == 0.)
@@ -42,15 +42,15 @@ double PositiveRoot(double a, double b, double c)
             return ( -b + sqrt(d) ) / (2. * a);
         }
     }
-    return WRONG;
+    return POSITIVE_WRONG_ROOT;
 }
 
-double NegativeRoot(double a, double b, double c)
+double MyUseful::NegativeRoot(double a, double b, double c)
 {
     if (a == 0.)
     {
-        if(b == 0. && c!= 0.) return -WRONG;
-        if(b != 0. && c <= 0.) return -WRONG;
+        if(b == 0. && c!= 0.) return NEGATIVE_WRONG_ROOT;
+        if(b != 0. && c <= 0.) return NEGATIVE_WRONG_ROOT;
         return -b/c;
     }
     else
@@ -58,7 +58,7 @@ double NegativeRoot(double a, double b, double c)
         if(b == 0.)
         {
             if (c == 0.) return 0.;
-            if (a*c > 0.) return -WRONG;
+            if (a*c > 0.) return NEGATIVE_WRONG_ROOT;
             else return sqrt(-a/c);
         }
         if(c == 0.)
@@ -72,6 +72,33 @@ double NegativeRoot(double a, double b, double c)
             return ( -b - sqrt(d) ) / (2. * a);
         }
     }
-    return -WRONG;
+    return NEGATIVE_WRONG_ROOT;
+}
+
+bool MyUseful::IsRoots(double a, double b, double c)
+{
+    if (a == 0.)
+    {
+        if(b == 0. && c!= 0.) return false;
+        return true;
+    }
+    else
+    {
+        if(b == 0.)
+        {
+            if (a*c < 0.) return false;
+            else return true;
+        }
+        if(c == 0.)
+        {
+            return true;
+        }
+        double d = b*b - 4. * a * c;
+        if(d > 0.)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 

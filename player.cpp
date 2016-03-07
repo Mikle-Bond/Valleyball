@@ -51,9 +51,9 @@ void Player::initDefault(const Vector2D &left, const Vector2D &right,
 	set_block();
 }
 
-bool Player::move(double dt)
+bool Player::move()
 {
-	bool isOk = Movable::move(dt);
+    bool isOk = Movable::move();
 	set_block();
 	return isOk;
 }

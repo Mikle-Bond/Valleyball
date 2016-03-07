@@ -177,7 +177,7 @@ Manager::Status Manager::nextFrame()
 	  	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 			Player * plr = plr_iter->second;
 			if (bll->IsCrossing(*plr)) {
-				bll->push(plr->get_force(), dt_);
+                bll->push(plr->get_force());
 				// In the perfect world there should be the pointer to the ball, 
 				// as a paraneter to .get_force(), but I'll do this later.
 				setState(
@@ -190,14 +190,14 @@ Manager::Status Manager::nextFrame()
 			}
 		}
 		// ... with fouth dimention
-		bll->move(dt_);
+        bll->move();
 		// bll->draw();
 	} 
 
 	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 		Player * plr = plr_iter->second;
 		plr->idle();
-		plr->move(dt_);
+        plr->move();
 //		plr->draw();
 	}
 //	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {

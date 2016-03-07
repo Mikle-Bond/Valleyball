@@ -17,7 +17,8 @@ SOURCES += \
     movable.cpp \
     manager.cpp \
     equation.cpp \
-    dan.cpp
+    dan.cpp \
+    ball.cpp
 
 
 include(deployment.pri)

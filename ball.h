@@ -3,17 +3,27 @@
 #include "vector2d.h"
 #include "block.h"
 #include "movable.h"
+#include "equation.h"
+#include "manager.h"
 
 #define NONE_CROSS       0
+#define CROSS           -1
 #define VERTICAL_CROSS   1
 #define HORIZONTAL_CROSS 2
 #define SLOPPING_CROSS   3
-
+/*
+ *Ball is a class. Ball can move. Whatever you want you know
+ *it's radius(get_radius()), accelaration(get_accel()), speed(get_cpeed),
+ * mass(get_Mass()) and, as a Movable(get_pos()), position. You can push
+ * Ball by force - Ball::push(Vector2D(-1, 0)).
+ * function Ball::IsCrossing(Block) isn't good enough but now it shows
+ * Vertical and Horizontal crossing
+*/
 class Ball : public Movable
 {
     Vector2D acceleration;//by external force, if i need it here???
     double _mass;
-    double _Radius;
+    double radius_;
 
 public:
 //-------------------------------------------------------------------------------------------------
@@ -21,7 +31,7 @@ public:
          const Vector2D &st_position = Vector2D(0.5, 0.5), const Vector2D &st_speed = Vector2D(),\
          Vector2D accel = Vector2D(0, -0.0981), double mass = 1, double radius = 0.005)\
         :Movable(left, right, st_position, st_speed), acceleration(accel)\
-        ,_mass(mass),_Radius(radius)
+        ,_mass(mass),radius_(radius)
     {
     }
     ~Ball(){}
@@ -35,9 +45,9 @@ public:
         return acceleration;
     }
 //-------------------------------------------------------------------------------------------------
-    inline double get_Radius() const
+    inline double get_radius() const
     {
-        return _Radius;
+        return radius_;
     }
 //-------------------------------------------------------------------------------------------------
     inline double get_Mass() const
@@ -45,42 +55,13 @@ public:
         return _mass;
     }
 //-------------------------------------------------------------------------------------------------
-    void push(Vector2D f, double dt)
-    {
-        speed.x += (f.x / _mass + acceleration.x) * dt;
-        speed.y += (f.y / _mass + acceleration.y) * dt;
-    }
+    void push(Vector2D f);
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------
-    bool move(double dt) override
-    {
-        speed.x += (acceleration.x) * dt;
-        speed.y += (acceleration.y) * dt;
-
-        return Movable::move(dt);// may be it isn't need becose of we haven't crossing with walls
-    }
-/*
- * now only vertical and horizontal blocks, may be sloping in the future
- * i need to think about it
-*/
-    int IsCrossing (const Block &block) const //i hope that block is orientated
-    {
-        if (block.a.y == block.b.y)
-
-            if((get_pos().y + _Radius >= block.a.y) &&  (get_pos().y - _Radius <= block.a.y))
-                return HORIZONTAL_CROSS;
-
-        if ((block.a.x == block.b.x) &&\
-                (block.a.y > block.b.y)?\
-                (get_pos().y - _Radius <= block.a.y):\
-                (get_pos().y - _Radius <= block.b.y))
-            if((get_pos().x + _Radius >= block.a.x) && (get_pos().x - _Radius <= block.a.x))
-                return VERTICAL_CROSS;
-
-        return NONE_CROSS;
-    }
-
+    bool move() override;
+//=================================================================================================
+    int IsCrossing (const Block &block) const;//i hope that block is orientated
 };
 //===================================================================================================
 /*
