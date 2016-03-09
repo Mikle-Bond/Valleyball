@@ -8,6 +8,7 @@
 #include "block.h"
 #include "player.h"
 #include "factory.h"
+#include "objecttable.hpp"
 
 /* Ok. Manager can manage. After giving him the beginning configuration
  * we can change nothing. So, The basic usage is to place needed objects
@@ -96,7 +97,6 @@ private:
 	~Manager();
 
 	// Used fo correct end of game.
-	const std::string * getLoserName(const Player * plr) const;
 	void setState(
 		const Status sts,
 		const std::string * plr_name, 
@@ -109,6 +109,14 @@ private:
 
 	ITimer timer_;
 
+	ObjectTable<Player> player_tab;
+	ObjectTable<Block> block_tab;
+	ObjectTable<Ball> ball_tab;
+	ObjectTable<Net> net_tab;
+
+	template<typename T>
+	Status collideBalls(ObjectTable<T> & colliders);
+#if 0
 	// Here ve have a list for each kind of objects.
 	// To ease handling them, we can put them into
 	// container like this.
@@ -135,6 +143,7 @@ private:
 	std::map<std::string, Block *> net_tab;
 	std::map<std::string, ball_t> ball_tab;
 	std::map<std::string, block_t> block_tab;
+#endif // 0
 };
 
 #endif // MANAGER_H 

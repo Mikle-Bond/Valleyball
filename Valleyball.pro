@@ -3,7 +3,7 @@ CONFIG += debug
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
-CONFIG += C++11
+CONFIG += C++14
 DEFINES += "DEBUG"
 
 SOURCES += \
@@ -27,6 +27,7 @@ qtcAddDeployment()
 LIBS += -lm
 
 HEADERS += \
+    objecttable.hpp \
     ball.h \
     textrender.h \
     rendmachine.h \

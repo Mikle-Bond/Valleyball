@@ -8,14 +8,6 @@ Manager::State Manager::state_;
 
 namespace {
 
-template <typename T>
-inline void killMap(std::map<std::string, T> & mp)
-{
-	for (auto i = mp.begin(); i != mp.end(); ++i) {
-		delete (i->second).obj;
-	}
-}
-
 class ManagerDestroyer 
 {
 public:
@@ -71,109 +63,84 @@ bool Manager::resetSingleton()
 
 Player & Manager::addPlayer(const std::string & name, const std::string & type)
 {
-    auto it = factories.find(type);
-    if (it == factories.end()) {
-        throw logic_error("Player realization is not registered: " + type);
+	auto it = factories.find(type);
+	if (it == factories.end()) {
+		throw logic_error("Player realization is not registered: " + type);
 	}
-    if (player_tab.count(name) > 0) {
-        throw logic_error("Player already exist.");
-	}
+
 	Player * plr = it->second->create();
-	player_tab.insert(std::make_pair(name, plr));
+	player_tab.addEntry(name, plr);
 	return *plr;
 }
 
 const Player & Manager::getPlayer(const std::string & name) const
 {
-	return *(player_tab.at(name));
+	return *(player_tab.getObject(name));
 }
 
-Block & Manager::addNet(const std::string & name)
+Net & Manager::addNet(const std::string & name)
 {
-
-	if (block_tab.count(name) > 0)
-        throw logic_error("Block already exist.");
-	Block *x = new Block();
-	net_tab.insert(std::make_pair(name, x));
+	Net *x = new Net();
+	net_tab.addEntry(name, x, nullptr);
 	return *x;
 }
 
-
-const Block & Manager::getNet(const std::string & name) const
+const Net & Manager::getNet(const std::string & name) const
 {
-	return *(net_tab.at(name));
+	return *(net_tab.getObject(name));
 }
 
 Block & Manager::addBlock(const std::string & name, const std::string & obeyer)
 {
-	Player * res = player_tab.at(obeyer); // TODO: make custom exception
+	Player * res = player_tab.getObject(obeyer);
 	Block * blk = new Block();
-	if (block_tab.count(name) > 0)
-        throw logic_error("Block is already exist.");
-	block_t y;
-	y.obj = blk;
-	y.plr = res;
-	block_tab.insert(std::make_pair(name, y));
+	block_tab.addEntry(name, blk, res);
 	return *blk;
 }
 	
 const Block & Manager::getBlock(const std::string & name) const
 {
-	return *(block_tab.at(name).obj);
+	return *(block_tab.getObject(name));
 }
 
 Ball & Manager::addBall(const std::string & name)
 {
-	if (ball_tab.count(name) > 0)
-        throw logic_error("Ball is already exist.");
 	Ball * bll = new Ball();
-	ball_t y;
-	y.plr = nullptr;
-	y.obj = bll;
-	ball_tab.insert(std::make_pair(name, y));
+	ball_tab.addEntry(name, bll, nullptr);
 	return *bll;
 }
 
 const Ball & Manager::getBall(const std::string & name) const
 {
-	return *(ball_tab.at(name).obj);
+	return *(ball_tab.getObject(name));
 }
 
-Manager::Status Manager::nextFrame()
+template<typename T>
+Manager::Status Manager::collideBalls(ObjectTable<T> & colliders)
 {
-	if (state_.currentStatus == Status::GAME_OVER)
-		return Status::GAME_OVER;
-	state_.currentStatus = Status::OK;
-
-	// check for collisions of balls
 	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
-		Ball * bll = ball_iter->second.obj;
-		// ... with nets
-	  	for (auto net_iter = net_tab.begin(); net_iter != net_tab.end(); ++net_iter) {
-			Block * net = net_iter->second;
+		const Ball * bll = ball_iter->second.object;
+	  	for (auto iter = colliders.begin(); iter != colliders.end(); ++iter) {
+			const Block * net = static_cast<const Block *>((iter->second).object);
 			if (bll->IsCrossing(*net)) {
 				setState(
 					Status::GAME_OVER,
-					getLoserName((ball_iter->second).plr),
+					player_tab.findName((ball_iter->second).owner),
 					&(ball_iter->first),
-					&(net_iter->first));
-				return Status::GAME_OVER;
+					&(iter->first));
+				return state_.currentStatus;
 			}
 		}
-		// ... with walls
-	  	for (auto block_iter = block_tab.begin(); block_iter != block_tab.end(); ++block_iter) {
-			Block * blk = (block_iter->second).obj;
-			if (bll->IsCrossing(*blk)) {
-				setState(
-					Status::GAME_OVER,
-					getLoserName((block_iter->second).plr),
-					&(ball_iter->first),
-					&(block_iter->first));
-				return Status::GAME_OVER;
-			}
-		}
-		// ... with players
-	  	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
+	}
+	return state_.currentStatus;
+}
+
+template<>
+Manager::Status Manager::collideBalls(ObjectTable<Player> & colliders)
+{
+	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
+		Ball * bll = ball_iter->second.object;
+	  	for (auto plr_iter = colliders.begin(); plr_iter != colliders.end(); ++plr_iter) {
 			Player * plr = plr_iter->second;
 			if (bll->IsCrossing(*plr)) {
 				bll->push(plr->get_force());
@@ -184,15 +151,39 @@ Manager::Status Manager::nextFrame()
 					&(plr_iter->first),
 					&(ball_iter->first),
 					nullptr);
-				ball_iter->second.plr = plr;
+				ball_iter->second.owner = plr;
 				// notice that here is no return.
 			}
 		}
-		// ... with fouth dimention
+	}
+	return state_.currentStatus;
+}
+
+
+Manager::Status Manager::nextFrame()
+{
+	if (state_.currentStatus == Status::GAME_OVER)
+		return Status::GAME_OVER;
+	state_.currentStatus = Status::OK;
+
+	// check for collisions of balls
+	// ... with nets
+	if (collideBalls(net_tab) == Status::GAME_OVER)
+		return Status::GAME_OVER;
+	// ... with walls
+	if (collideBalls(block_tab) == Status::GAME_OVER)
+		return Status::GAME_OVER;
+	// ... with players
+	collideBalls(player_tab);
+
+	// ... with fourth dimention
+	for (auto ball_iter = ball_tab.begin(); ball_iter != ball_tab.end(); ++ball_iter) {
+		Ball * bll = ball_iter->second.object;
 		bll->move();
 		// bll->draw();
 	} 
 
+	// same for players
 	for (auto plr_iter = player_tab.begin(); plr_iter != player_tab.end(); ++plr_iter) {
 		Player * plr = plr_iter->second;
 		plr->idle();
@@ -247,29 +238,8 @@ const Manager::State & Manager::getState()
 	return state_;
 }
 
-const std::string * Manager::getLoserName(const Player * plr) const
-{
-	for (auto it = player_tab.begin(); it != player_tab.end(); ++it) {
-		if (plr == it->second)
-			return &(it->first);
-	}
-	return nullptr;
-}
-
 Manager::~Manager()
 {
-	// Blocks
-	killMap<block_t>(block_tab);
-	// Balls
-	killMap<ball_t>(ball_tab);
-	// Players
-	for (auto i = player_tab.begin(); i != player_tab.end(); ++i) {
-		delete i->second;
-	}
-	// Nets
-	for (auto i = net_tab.begin(); i != net_tab.end(); ++i) {
-		delete i->second;
-	}
 	state_.currentStatus = Status::DESTROYED;
 }
 

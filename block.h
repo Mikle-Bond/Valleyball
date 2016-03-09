@@ -23,4 +23,6 @@ struct Block // : public RenderInterface
 	Vector2D a, b;
 };
 
+typedef Block Net;
+
 #endif // BLOCK_H

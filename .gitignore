@@ -86,3 +86,6 @@ $RECYCLE.BIN/
 
 # YCM config scripts
 .ycm_*
+
+# Fonts
+*.ttf
